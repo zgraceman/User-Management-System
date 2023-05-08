@@ -20,9 +20,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/userById")
     public User getUser(@RequestParam Integer id) {
         Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return (User) user.get();
+        }
+        return null;
+    }
+    @GetMapping("/userByName")
+    public User getUser(@RequestParam String name) {
+        Optional<User> user = userService.getUser(name);
         if (user.isPresent()) {
             return (User) user.get();
         }

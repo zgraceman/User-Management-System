@@ -27,12 +27,35 @@ public class UserService {
 
     public Optional<User> getUser(Integer id) {
 
+        System.out.println("getUser Integer id Method");
+
         Optional optional = Optional.empty();
 
         for (User user: userList) {
             if(id == user.getId()) {
                 optional = Optional.of(user);
                 return optional;
+            }
+        }
+        return optional;
+    }
+
+    public Optional<User> getUser(String name) {
+
+        System.out.println("getUser String name Method");
+
+        Optional optional = Optional.empty();
+
+        for (User user: userList) {
+            System.out.println(name);
+            System.out.println(user.getName());
+            if(name.equals(user.getName())) {
+                System.out.println("true");
+                optional = Optional.of(user);
+                return optional;
+            }
+            else {
+                System.out.println("false");
             }
         }
         return optional;
