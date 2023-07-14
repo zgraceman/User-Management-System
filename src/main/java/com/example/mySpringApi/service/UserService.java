@@ -1,6 +1,9 @@
 package com.example.mySpringApi.service;
 
 import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.repository.UserRepositoryI;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +24,29 @@ import java.util.Optional;
  * TODO: Add methods to support other operations such as updating and deleting users.
  */
 @Service
+@Slf4j
 public class UserService {
 
+    private UserRepositoryI userRepositoryI;
+
     private List<User> userList;
+
+    /**
+     * Constructs a new UserService with a UserRepository.
+     *
+     * @param userRepositoryI the repository that provides access to the user data store
+     */
+    @Autowired
+    public UserService(UserRepositoryI userRepositoryI) {
+        this.userRepositoryI = userRepositoryI;
+    }
 
     /**
      * Constructs a new UserService, initializes and populates the userList.
      *
      * TODO: Replace the hard-coded user data with data fetched from a persistent data store.
      */
+    /*
     public UserService() {
 
         userList = new ArrayList<>();
@@ -41,7 +58,7 @@ public class UserService {
         User user5 = new User(5, "Peter", 46, "peter@gmail.com");
 
         userList.addAll(Arrays.asList(user1, user2, user3, user4, user5));
-    }
+    } */
 
     /**
      * Retrieves a User by ID from the list. Returns an Optional<User> that contains
@@ -54,17 +71,9 @@ public class UserService {
      */
     public Optional<User> getUser(Integer id) {
 
-        System.out.println("getUser Integer id Method");
+        log.info("getUser Integer id Method");
 
-        Optional optional = Optional.empty();
-
-        for (User user: userList) {
-            if(id == user.getId()) {
-                optional = Optional.of(user);
-                return optional;
-            }
-        }
-        return optional;
+        return userRepositoryI.findById(id);
     }
 
     /**
@@ -79,22 +88,8 @@ public class UserService {
      */
     public Optional<User> getUser(String name) {
 
-        System.out.println("getUser String name Method");
+        log.info("getUser String name method");
 
-        Optional optional = Optional.empty();
-
-        for (User user: userList) {
-            System.out.println(name);
-            System.out.println(user.getName());
-            if(name.equals(user.getName())) {
-                System.out.println("true");
-                optional = Optional.of(user);
-                return optional;
-            }
-            else {
-                System.out.println("false");
-            }
-        }
-        return optional;
+        return userRepositoryI.findByName(name);
     }
 }
