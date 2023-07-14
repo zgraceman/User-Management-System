@@ -1,5 +1,10 @@
 package com.example.mySpringApi.api.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  * User is a data model that represents a user in the system.
  * Each User has an id, name, age, and email, which can be retrieved and updated.
@@ -16,10 +21,13 @@ package com.example.mySpringApi.api.model;
  *       For example, use @Getter, @Setter, and @ToString annotations from Lombok
  *       to automatically generate these methods.
  */
+@Entity
 public class User {
 
     // Fields
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     private int age;
     private String email;
