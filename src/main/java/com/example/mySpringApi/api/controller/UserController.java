@@ -1,6 +1,6 @@
 package com.example.mySpringApi.api.controller;
 
-import com.example.mySpringApi.api.model.User;
+import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
