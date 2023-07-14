@@ -1,5 +1,21 @@
 package com.example.mySpringApi.api.model;
 
+/**
+ * User is a data model that represents a user in the system.
+ * Each User has an id, name, age, and email, which can be retrieved and updated.
+ *
+ * A User object's primary role in the application is to be managed by the
+ * UserService, which provides various services for manipulating and accessing User data.
+ * The UserController calls upon these services to handle incoming HTTP requests.
+ *
+ * Example usages of a User object include retrieving a user's data through a GET
+ * request to the "/userById" or "/userByName" endpoints, where the UserService
+ * retrieves a User from the underlying database.
+ *
+ * TODO: Replace getter, setter, and toString methods with Lombok annotations.
+ *       For example, use @Getter, @Setter, and @ToString annotations from Lombok
+ *       to automatically generate these methods.
+ */
 public class User {
 
     // Fields
@@ -9,7 +25,14 @@ public class User {
     private String email;
 
 
-    // Constructors
+    /**
+     * Constructs a new User with the given parameters.
+     *
+     * @param id    the user's ID
+     * @param name  the user's name
+     * @param age   the user's age
+     * @param email the user's email address
+     */
     public User(int id, String name, int age, String email) {
         this.id = id;
         this.name = name;
