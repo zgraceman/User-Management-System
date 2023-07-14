@@ -20,6 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Example: localhost:8080/userById?id=1 will return the User object associated with id 1
     @GetMapping("/userById")
     public User getUser(@RequestParam Integer id) {
         Optional<User> user = userService.getUser(id);
@@ -28,6 +29,8 @@ public class UserController {
         }
         return null;
     }
+
+    // Example: localhost:8080/userByName?name=Zach will return the User object associated with the name Zach
     @GetMapping("/userByName")
     public User getUser(@RequestParam String name) {
         Optional<User> user = userService.getUser(name);
