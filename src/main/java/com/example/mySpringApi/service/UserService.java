@@ -20,7 +20,6 @@ import java.util.Optional;
  *
  * The list of User objects is initialized in the constructor with some dummy data.
  *
- * TODO: Integrate with a database or other persistent data store instead of using hardcoded data.
  * TODO: Add methods to support other operations such as updating and deleting users.
  */
 @Service
@@ -67,7 +66,6 @@ public class UserService {
      * @param id the ID of the User to retrieve
      * @return an Optional<User> containing the found User, or empty if not found
      *
-     * TODO: Replace linear search with a more efficient search method when the user list grows large.
      */
     public Optional<User> getUser(Integer id) {
 
