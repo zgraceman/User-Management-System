@@ -90,4 +90,20 @@ public class UserService {
 
         return userRepositoryI.findByName(name);
     }
+
+    /**
+     * Saves a new user to the database.
+     *
+     * This method takes a User object as a parameter, logs the operation, and uses
+     * the UserRepositoryI instance to save the user into the database. The saved
+     * User object, which includes any updates such as the database-generated ID
+     * for a newly inserted user, is then returned.
+     *
+     * @param user The User object to be saved to the database.
+     * @return The saved User object, including any updates made by the database.
+     */
+    public User saveUser(User user) {
+        log.info("Saving new user to the database");
+        return userRepositoryI.save(user);
+    }
 }
