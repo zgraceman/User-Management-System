@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/userAPI")
 public class UserController {
 
     private UserService userService;
@@ -18,9 +19,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Example: localhost:8080/userById?id=1 will return the User object associated with id 1
-    @GetMapping("/userById")
-    public User getUser(@RequestParam Integer id) {
+
+    @GetMapping("/id/{id}")
+    public User getUser(@PathVariable int id) {
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
             return (User) user.get();
@@ -28,9 +29,8 @@ public class UserController {
         return null;
     }
 
-    // Example: localhost:8080/userByName?name=Zach will return the User object associated with the name Zach
-    @GetMapping("/userByName")
-    public User getUser(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public User getUser(@PathVariable String name) {
         Optional<User> user = userService.getUser(name);
         if (user.isPresent()) {
             return (User) user.get();
