@@ -25,7 +25,6 @@ import java.util.Optional;
  * If a User resource is found, it is returned as the response body.
  * If no User resource is found, null is returned.
  *
- * TODO: Test current CRUD operations with Postman
  * TODO: Align User model fields with client data with JSON structure in POST request
  */
 @RestController

@@ -21,7 +21,6 @@ import java.util.Optional;
  *
  * The list of User objects is initialized in the constructor with some dummy data.
  *
- * TODO: Add methods to support other operations such as updating and deleting users.
  */
 @Service
 @Slf4j
@@ -40,25 +39,6 @@ public class UserService {
     public UserService(UserRepositoryI userRepositoryI) {
         this.userRepositoryI = userRepositoryI;
     }
-
-    /**
-     * Constructs a new UserService, initializes and populates the userList.
-     *
-     * TODO: Replace the hard-coded user data with data fetched from a persistent data store.
-     */
-    /*
-    public UserService() {
-
-        userList = new ArrayList<>();
-
-        User user1 = new User(1, "Zach", 23, "zach@gmail.com");
-        User user2 = new User(2, "Don", 33, "don@gmail.com");
-        User user3 = new User(3, "Michelle", 20, "michelle@gmail.com");
-        User user4 = new User(4, "Janet", 53, "janet@gmail.com");
-        User user5 = new User(5, "Peter", 46, "peter@gmail.com");
-
-        userList.addAll(Arrays.asList(user1, user2, user3, user4, user5));
-    } */
 
     /**
      * Retrieves a User by ID from the list. Returns an Optional<User> that contains
@@ -125,6 +105,7 @@ public class UserService {
      */
     public User updateUser(User user) {
         log.warn("Updated a user from the database");
+
         // ensures the user exists before updating
         if (!userRepositoryI.existsById(user.getId())) {
             throw new EntityNotFoundException("User not found with id " + user.getId());
