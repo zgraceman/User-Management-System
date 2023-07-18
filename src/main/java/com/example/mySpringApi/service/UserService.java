@@ -2,6 +2,7 @@ package com.example.mySpringApi.service;
 
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepositoryI;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,19 +92,44 @@ public class UserService {
         return userRepositoryI.findByName(name);
     }
 
+
     /**
-     * Saves a new user to the database.
+     * Creates a new User object in the database. It accepts a User object,
+     * logs the action, then saves the User object in the database using the save() method
+     * of the UserRepositoryI interface.
      *
-     * This method takes a User object as a parameter, logs the operation, and uses
-     * the UserRepositoryI instance to save the user into the database. The saved
-     * User object, which includes any updates such as the database-generated ID
-     * for a newly inserted user, is then returned.
+     * @param user - A User object to be saved in the database.
+     * @return the User object that was saved in the database. This will include any changes
+     * made to the User object by the database, such as the automatically generated ID for
+     * a new User.
      *
-     * @param user The User object to be saved to the database.
-     * @return The saved User object, including any updates made by the database.
+     * TODO: Add creation-specific logic or validation
      */
-    public User saveUser(User user) {
+    public User createUser(User user) {
         log.info("Saving new user to the database");
+        return userRepositoryI.save(user);
+    }
+
+    /**
+     * Updates an existing User object in the database. It accepts a User object
+     * and first checks if the User object exists in the database using the existsById() method
+     * of the UserRepositoryI interface. If the User object does not exist, an EntityNotFoundException
+     * is thrown.
+     *
+     * If the User object does exist, then the User object is updated in the database using the
+     * save() method of the UserRepositoryI interface.
+     *
+     * @param user - A User object to be updated in the database. This User object should already
+     * exist in the database and have a valid ID.
+     * @return the User object that was updated in the database. This will include any changes
+     * made to the User object by the database.
+     * @throws EntityNotFoundException if the User object does not exist in the database.
+     */
+    public User updateUser(User user) {
+        // ensures the user exists before updating
+        if (!userRepositoryI.existsById(user.getId())) {
+            throw new EntityNotFoundException("User not found with id " + user.getId());
+        }
         return userRepositoryI.save(user);
     }
 }

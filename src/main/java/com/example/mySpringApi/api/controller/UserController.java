@@ -69,37 +69,35 @@ public class UserController {
     }
 
     /**
-     * Endpoint to add a new user.
+     * Endpoint to create a new user.
      *
-     * This method is mapped to the "/addUser" endpoint and handles HTTP POST requests.
-     * It takes a User object from the request body, passed by the @RequestBody
-     * annotation. This User object is then passed to the saveUser method of the
-     * UserService, which saves the user to the database. The saved User object,
-     * including any updates made by the database (such as the generated ID for
-     * a new user), is then returned in the HTTP response body.
+     * This method is mapped to the "/createUser" endpoint and handles HTTP POST requests.
+     * It receives a User object from the request body via the @RequestBody annotation.
+     * This User object is then passed to the createUser method of the UserService, which
+     * saves the user to the database. The User object saved in the database, including
+     * any updates made by the database (like the generated ID for a new user), is returned
+     * in the HTTP response body.
      *
-     * @param user A User object that is included in the request body.
-     * @return The saved User object, including any updates made by the database.
+     * @param user A User object contained in the request body.
+     * @return The User object saved in the database, including any updates made by the database.
      */
-    @PostMapping("/addUser")
-    public User addUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    @PostMapping("/createUser")
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
 
     /**
      * Endpoint to update an existing user.
      *
      * This method is mapped to the "/updateUser" endpoint and handles HTTP PUT requests.
-     * It takes a User object from the request body, passed by the @RequestBody
-     * annotation. This User object should include the ID of the existing user that
-     * is to be updated. This User object is then passed to the saveUser method of the
-     * UserService, which updates the user in the database. The updated User object,
-     * including any changes made during the update, is then returned in the HTTP response body.
+     * It receives a User object from the request body via the @RequestBody annotation. This
+     * User object should have an ID that corresponds to an existing user in the database.
+     * This User object is then passed to the updateUser method of the UserService, which
+     * updates the user in the database. The updated User object, including any changes
+     * made during the update, is returned in the HTTP response body.
      *
-     * Note: If a User with the given ID does not already exist in the database, this method
-     * will behave like the "/addUser" endpoint and create a new User.
-     * However, the HTTP PUT method is not idempotent by convention, and thus this endpoint
-     * should ideally be used only to update existing users.
+     * If a User with the specified ID does not exist in the database, the updateUser method
+     * throws an EntityNotFoundException.
      *
      * @param user A User object that is included in the request body. This should include
      *             the ID of the user to be updated.
@@ -107,6 +105,6 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public User updateUser(@RequestBody User user) {
-        return userService.saveUser(user);
+        return userService.updateUser(user);
     }
 }
