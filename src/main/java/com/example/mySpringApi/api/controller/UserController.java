@@ -7,6 +7,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * UserController is a REST controller that exposes endpoints for interacting with User resources.
+ * It routes incoming HTTP requests to appropriate handler methods.
+ *
+ * This class is annotated with @RestController, indicating it's a RESTful controller.
+ * The @RequestMapping("/userAPI") annotation is used at the class level to map the URL prefix for all handler methods
+ * in this class.
+ *
+ * The UserService is injected into this controller via constructor injection.
+ *
+ * Two handler methods are provided for fetching User resources:
+ * 1. @GetMapping("/id/{id}") maps to a method which retrieves a User by their ID.
+ * 2. @GetMapping("/name/{name}") maps to a method which retrieves a User by their name.
+ *
+ * If a User resource is found, it is returned as the response body.
+ * If no User resource is found, null is returned.
+ *
+ * TODO: Test current CRUD operations with Postman
+ * TODO: Align User model fields with client data with JSON structure in POST request
+ */
 @RestController
 @RequestMapping("/userAPI")
 public class UserController {
@@ -20,6 +40,11 @@ public class UserController {
     }
 
 
+    /**
+     * Retrieves a User by ID.
+     * @param id the ID of the User to retrieve
+     * @return the User object if found; null otherwise
+     */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
         Optional<User> user = userService.getUser(id);
@@ -29,6 +54,11 @@ public class UserController {
         return null;
     }
 
+    /**
+     * Retrieves a User by name.
+     * @param name the name of the User to retrieve
+     * @return the User object if found; null otherwise
+     */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
         Optional<User> user = userService.getUser(name);
