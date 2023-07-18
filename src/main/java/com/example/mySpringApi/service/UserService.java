@@ -69,8 +69,7 @@ public class UserService {
      *
      */
     public Optional<User> getUser(Integer id) {
-
-        log.info("getUser Integer id Method");
+        log.info("getting a user from the database via id");
 
         return userRepositoryI.findById(id);
     }
@@ -86,8 +85,7 @@ public class UserService {
      * TODO: Consider whether multiple users could have the same name and how to handle such situations.
      */
     public Optional<User> getUser(String name) {
-
-        log.info("getUser String name method");
+        log.info("getting a user from the database via name");
 
         return userRepositoryI.findByName(name);
     }
@@ -106,7 +104,7 @@ public class UserService {
      * TODO: Add creation-specific logic or validation
      */
     public User createUser(User user) {
-        log.info("Saving new user to the database");
+        log.warn("Saving new user to the database");
         return userRepositoryI.save(user);
     }
 
@@ -126,10 +124,27 @@ public class UserService {
      * @throws EntityNotFoundException if the User object does not exist in the database.
      */
     public User updateUser(User user) {
+        log.warn("Updated a user from the database");
         // ensures the user exists before updating
         if (!userRepositoryI.existsById(user.getId())) {
             throw new EntityNotFoundException("User not found with id " + user.getId());
         }
         return userRepositoryI.save(user);
+    }
+
+    /**
+     * Deletes a user from the database.
+     *
+     * This method uses the UserRepositoryI's deleteById method to remove the user
+     * with the provided id from the database. If there is no user with the given
+     * id in the database, the JpaRepository's deleteById method throws an
+     * EmptyResultDataAccessException. The handling of this exception can be done
+     * where this service method is called, typically in the UserController.
+     *
+     * @param id The id of the user to delete.
+     */
+    public void deleteUser(int id) {
+        log.warn("Deleting user from the database");
+        userRepositoryI.deleteById(id);
     }
 }

@@ -3,6 +3,7 @@ package com.example.mySpringApi.api.controller;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -38,7 +39,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
 
     /**
      * Retrieves a User by ID.
@@ -106,5 +106,30 @@ public class UserController {
     @PutMapping("/updateUser")
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
+    }
+
+    /**
+     * Endpoint to delete an existing user.
+     *
+     * This method is mapped to the "/deleteUser/{id}" endpoint and handles HTTP DELETE
+     * requests. It takes an id path variable, passed by the @PathVariable annotation.
+     * This id is then passed to the deleteUser method of the UserService, which deletes
+     * the user with the corresponding id from the database.
+     *
+     * The method returns an HTTP 200 OK status in the response to indicate that
+     * the user was successfully deleted.
+     *
+     * If the UserService's deleteUser method throws an EmptyResultDataAccessException
+     * (because there is no user with the given id in the database), this method
+     * should catch that exception and return an appropriate HTTP error status
+     * (like 404 NOT FOUND).
+     *
+     * @param id The id of the user to delete, included in the path of the request.
+     * @return A ResponseEntity with an HTTP status code.
+     */
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
 }
