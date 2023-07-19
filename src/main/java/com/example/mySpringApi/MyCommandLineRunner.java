@@ -57,13 +57,12 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // Currently defaults the users in the database to these five users everytime the application restarts.
-        // Consider finding a solution/better way to do this/work with the data
-        userRepositoryI.save(new User(1, "Zach", 23, "zach@gmail.com"));
-        userRepositoryI.save(new User(2, "Don", 33, "don@gmail.com"));
-        userRepositoryI.save(new User(3, "Michelle", 20, "michelle@gmail.com"));
-        userRepositoryI.save(new User(4, "Janet", 53, "janet@gmail.com"));
-        userRepositoryI.save(new User(5, "Peter", 46, "peter@gmail.com"));
-
+        if (userRepositoryI.count() == 0) {
+            userRepositoryI.save(new User("Zach", 23, "zach@gmail.com"));
+            userRepositoryI.save(new User("Don", 33, "don@gmail.com"));
+            userRepositoryI.save(new User("Michelle", 20, "michelle@gmail.com"));
+            userRepositoryI.save(new User("Janet", 53, "janet@gmail.com"));
+            userRepositoryI.save(new User("Peter", 46, "peter@gmail.com"));
+        }
     }
 }

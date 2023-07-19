@@ -36,20 +36,17 @@ public class User {
     private String email;
 
 
-    // No Args Constructor
-    // TODO: Remove later when integrating this class with lombok
+    // TODO: Remove later when integrating this class with lombok, and add @NoArgsConstructor
     public User() {}
 
     /**
      * Constructs a new User with the given parameters.
      *
-     * @param id    the user's ID
      * @param name  the user's name
      * @param age   the user's age
      * @param email the user's email address
      */
-    public User(int id, String name, int age, String email) {
-        this.id = id;
+    public User(String name, int age, String email) {
         this.name = name;
         this.age = age;
         this.email = email;
