@@ -1,0 +1,39 @@
+# Application configuration
+
+# Spring settings
+spring:
+
+  # ANSI console output settings
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  # -------------------------
+  # Database Connection settings
+  # -------------------------
+  datasource:
+    # Connection URL for the database "SpringRestAPI"
+    url: jdbc:mysql://localhost:3306/SpringRestAPI?createDatabaseIfNotExist=true
+
+    # Database username and password
+    username: root
+    password: root
+
+    # Database driver class name
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # -------------------------
+  # JPA / Hibernate settings
+  # -------------------------
+  jpa:
+    # Show SQL query log in console
+    show-sql: true
+
+    hibernate:
+      # Update database schema according to entities
+      ddl-auto: create-drop
+
+    properties:
+      hibernate:
+        # Specific SQL dialect for MySQL 5
+        dialect: org.hibernate.dialect.MySQL5Dialect
