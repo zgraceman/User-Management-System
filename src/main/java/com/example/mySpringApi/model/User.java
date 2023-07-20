@@ -20,11 +20,11 @@ import lombok.Setter;
  * request to the "/userById" or "/userByName" endpoints, where the UserService
  * retrieves a User from the underlying database.
  *
- * TODO: Replace getter, setter, and toString methods with Lombok annotations.
- *       For example, use @Getter, @Setter, and @ToString annotations from Lombok
- *       to automatically generate these methods.
  */
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
 
     // Fields
@@ -36,9 +36,6 @@ public class User {
     private String email;
 
 
-    // TODO: Remove later when integrating this class with lombok, and add @NoArgsConstructor
-    public User() {}
-
     /**
      * Constructs a new User with the given parameters.
      *
@@ -49,35 +46,6 @@ public class User {
     public User(String name, int age, String email) {
         this.name = name;
         this.age = age;
-        this.email = email;
-    }
-
-    // Getters & Setters
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
         this.email = email;
     }
 
