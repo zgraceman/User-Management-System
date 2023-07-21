@@ -2,6 +2,7 @@ package com.example.mySpringApi.service;
 
 import com.example.mySpringApi.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,4 +55,11 @@ public interface UserServiceI {
      * @param id the ID of the User to delete
      */
     void deleteUser(int id);
+
+    /**
+     * Fetches all User objects from the data store.
+     *
+     * @return a List of all User objects. Returns an empty list if no Users are found.
+     */
+    List<User> getAllUsers();
 }

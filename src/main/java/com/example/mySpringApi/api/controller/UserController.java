@@ -1,11 +1,12 @@
 package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.service.UserServiceImpl;
+import com.example.mySpringApi.service.UserServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Optional;
  * The @RequestMapping("/userAPI") annotation is used at the class level to map the URL prefix for all handler methods
  * in this class.
  *
- * The UserService is injected into this controller via constructor injection.
+ * The UserServiceI is injected into this controller via constructor injection.
  *
  * Two handler methods are provided for fetching User resources:
  * 1. @GetMapping("/id/{id}") maps to a method which retrieves a User by their ID.
@@ -31,12 +32,12 @@ import java.util.Optional;
 @RequestMapping("/userAPI")
 public class UserController {
 
-    private UserServiceImpl userServiceImpl;
+    private UserServiceI userServiceI;
 
     // Construct Injection
     @Autowired
-    public UserController(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
+    public UserController(UserServiceI userServiceI) {
+        this.userServiceI = userServiceI;
     }
 
     /**
@@ -46,7 +47,7 @@ public class UserController {
      */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
-        Optional<User> user = userServiceImpl.getUser(id);
+        Optional<User> user = userServiceI.getUser(id);
         if (user.isPresent()) {
             return (User) user.get();
         }
@@ -60,11 +61,24 @@ public class UserController {
      */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
-        Optional<User> user = userServiceImpl.getUser(name);
+        Optional<User> user = userServiceI.getUser(name);
         if (user.isPresent()) {
             return (User) user.get();
         }
         return null;
+    }
+
+    /**
+     * Fetches all Users.
+     *
+     * This method handles GET requests at the "/userAPI" endpoint. It returns a list of all
+     * users from the data store or an empty list if no users exist.
+     *
+     * @return List of all User objects or an empty list.
+     */
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userServiceI.getAllUsers();
     }
 
     /**
@@ -82,7 +96,7 @@ public class UserController {
      */
     @PostMapping("/createUser")
     public User createUser(@RequestBody User user) {
-        return userServiceImpl.createUser(user);
+        return userServiceI.createUser(user);
     }
 
     /**
@@ -104,7 +118,7 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public User updateUser(@RequestBody User user) {
-        return userServiceImpl.updateUser(user);
+        return userServiceI.updateUser(user);
     }
 
     /**
@@ -128,7 +142,7 @@ public class UserController {
      */
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
-        userServiceImpl.deleteUser(id);
+        userServiceI.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 }

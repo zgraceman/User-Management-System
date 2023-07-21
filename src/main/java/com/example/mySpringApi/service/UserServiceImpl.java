@@ -123,4 +123,15 @@ public class UserServiceImpl implements UserServiceI {
         log.warn("Deleting user from the database");
         userRepositoryI.deleteById(id);
     }
+
+    /**
+     * Retrieves all User objects from the repository.
+     *
+     * @return a List of User objects. If no Users exist, returns an empty List.
+     */
+    @Override
+    public List<User> getAllUsers() {
+        log.info("Getting all users from the database");
+        return userRepositoryI.findAll();
+    }
 }
