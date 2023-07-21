@@ -1,30 +1,29 @@
 package com.example.mySpringApi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * User is a data model that represents a user in the system.
- * Each User has an id, name, age, and email, which can be retrieved and updated.
+ * The User is a JPA entity that represents a user in the application.
+ * It includes fields for id, name, age, and email. This entity is managed
+ * by UserService for various operations such as retrieval, update, and deletion.
  *
- * A User object's primary role in the application is to be managed by the
- * UserService, which provides various services for manipulating and accessing User data.
- * The UserController calls upon these services to handle incoming HTTP requests.
+ * This entity is mapped to the "user_info" table in the database.
  *
- * Example usages of a User object include retrieving a user's data through a GET
- * request to the "/userById" or "/userByName" endpoints, where the UserService
- * retrieves a User from the underlying database.
- *
+ * Annotations:
+ * @Entity: Specifies that this class is a JPA entity.
+ * @Getter: Lombok's annotation to generate getters for all fields.
+ * @Setter: Lombok's annotation to generate setters for all fields.
+ * @NoArgsConstructor: Lombok's annotation to generate a no-args constructor.
+ * @Table(name="user_info"): Specifies the name of the database table to be used.
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name="user_info")
 public class User {
 
     // Fields

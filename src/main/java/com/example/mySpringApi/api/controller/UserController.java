@@ -43,15 +43,11 @@ public class UserController {
     /**
      * Retrieves a User by ID.
      * @param id the ID of the User to retrieve
-     * @return the User object if found; null otherwise
+     * @return the User object if found ...
      */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
-        Optional<User> user = userServiceI.getUser(id);
-        if (user.isPresent()) {
-            return (User) user.get();
-        }
-        return null;
+        return userServiceI.getUser(id);
     }
 
     /**
@@ -61,11 +57,7 @@ public class UserController {
      */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
-        Optional<User> user = userServiceI.getUser(name);
-        if (user.isPresent()) {
-            return (User) user.get();
-        }
-        return null;
+        return userServiceI.getUser(name);
     }
 
     /**

@@ -20,18 +20,18 @@ public interface UserServiceI {
     /**
      * Retrieves a User by ID from the repository.
      *
-     * @param id the ID of the User to retrieve
-     * @return an Optional<User> containing the found User, or empty if not found
+     * @param id The ID of the User to retrieve.
+     * @return The User object associated with the provided ID.
      */
-    Optional<User> getUser(Integer id);
+    User getUser(Integer id);
 
     /**
      * Retrieves a User by name from the repository.
      *
      * @param name the name of the User to retrieve
-     * @return an Optional<User> containing the found User, or empty if not found
+     * @return The User object associated with the provided name.
      */
-    Optional<User> getUser(String name);
+    User getUser(String name);
 
     /**
      * Creates a new User object in the repository.

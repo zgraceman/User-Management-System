@@ -39,17 +39,21 @@ public class UserServiceImpl implements UserServiceI {
     }
 
     /**
-     * Retrieves a User by ID from the list. Returns an Optional<User> that contains
-     * the found User, or is empty if no User with the provided ID is found.
+     * Fetches a User by their ID from the UserRepository.
      *
-     * @param id the ID of the User to retrieve
-     * @return an Optional<User> containing the found User, or empty if not found
+     * This method interacts with the UserRepository to fetch a User based on the provided ID. The `findById` method
+     * of the UserRepository returns an Optional<User>. In this case, we are using the `get()` method to retrieve
+     * the User object directly. Currently, this operation can potentially lead to a NoSuchElementException if the User
+     * does not exist.
      *
+     * It's recommended to handle such potential exceptions appropriately.
+     *
+     * @param id The ID of the User to be fetched.
+     * @return The User object associated with the provided ID.
      */
-    public Optional<User> getUser(Integer id) {
+    public User getUser(Integer id) {
         log.info("getting a user from the database via id");
-
-        return userRepositoryI.findById(id);
+        return userRepositoryI.findById(id).get();
     }
 
     /**
@@ -57,15 +61,14 @@ public class UserServiceImpl implements UserServiceI {
      * the found User, or is empty if no User with the provided name is found.
      *
      * @param name the name of the User to retrieve
-     * @return an Optional<User> containing the found User, or empty if not found
+     * @return The User object associated with the provided name.
      *
      * TODO: Add handling for partial matches in user name search.
      * TODO: Consider whether multiple users could have the same name and how to handle such situations.
      */
-    public Optional<User> getUser(String name) {
+    public User getUser(String name) {
         log.info("getting a user from the database via name");
-
-        return userRepositoryI.findByName(name);
+        return userRepositoryI.findByName(name).get();
     }
 
 
