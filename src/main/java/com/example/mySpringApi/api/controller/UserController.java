@@ -1,7 +1,7 @@
 package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.service.UserService;
+import com.example.mySpringApi.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +31,12 @@ import java.util.Optional;
 @RequestMapping("/userAPI")
 public class UserController {
 
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     // Construct Injection
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     /**
@@ -46,7 +46,7 @@ public class UserController {
      */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
-        Optional<User> user = userService.getUser(id);
+        Optional<User> user = userServiceImpl.getUser(id);
         if (user.isPresent()) {
             return (User) user.get();
         }
@@ -60,7 +60,7 @@ public class UserController {
      */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
-        Optional<User> user = userService.getUser(name);
+        Optional<User> user = userServiceImpl.getUser(name);
         if (user.isPresent()) {
             return (User) user.get();
         }
@@ -82,7 +82,7 @@ public class UserController {
      */
     @PostMapping("/createUser")
     public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+        return userServiceImpl.createUser(user);
     }
 
     /**
@@ -104,7 +104,7 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+        return userServiceImpl.updateUser(user);
     }
 
     /**
@@ -128,7 +128,7 @@ public class UserController {
      */
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
-        userService.deleteUser(id);
+        userServiceImpl.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 }

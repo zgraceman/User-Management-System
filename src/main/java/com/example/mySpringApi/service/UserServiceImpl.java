@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +22,7 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class UserService {
+public class UserServiceImpl {
 
     private UserRepositoryI userRepositoryI;
 
@@ -36,7 +34,7 @@ public class UserService {
      * @param userRepositoryI the repository that provides access to the user data store
      */
     @Autowired
-    public UserService(UserRepositoryI userRepositoryI) {
+    public UserServiceImpl(UserRepositoryI userRepositoryI) {
         this.userRepositoryI = userRepositoryI;
     }
 
