@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class UserServiceImpl {
+public class UserServiceImpl implements UserServiceI {
 
     private UserRepositoryI userRepositoryI;
 
