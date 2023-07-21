@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * UserService is a service class that provides methods for retrieving User objects
- * from a predefined list.
+ * UserServiceImpl is a service class that implements the UserServiceI interface.
+ * It provides methods for retrieving, creating, updating and deleting User objects.
  *
- * This class is marked with the @Service annotation, making it a candidate
- * for Spring's component scanning to detect and add to the application context.
+ * This class is marked with the @Service annotation, which indicates that it's a Spring
+ * service and a candidate for Spring's component scanning to detect and add to the application context.
  *
- * The list of User objects is initialized in the constructor with some dummy data.
+ * This service class uses UserRepositoryI for data access.
  *
  */
 @Service
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserServiceI {
     private List<User> userList;
 
     /**
-     * Constructs a new UserService with a UserRepository.
+     * Constructs a new UserServiceImpl with a UserRepositoryI.
      *
      * @param userRepositoryI the repository that provides access to the user data store
      */
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserServiceI {
      * @param name the name of the User to retrieve
      * @return an Optional<User> containing the found User, or empty if not found
      *
-     * TODO: Add handling for case sensitivity and partial matches in user name search.
+     * TODO: Add handling for partial matches in user name search.
      * TODO: Consider whether multiple users could have the same name and how to handle such situations.
      */
     public Optional<User> getUser(String name) {
@@ -112,13 +112,10 @@ public class UserServiceImpl implements UserServiceI {
     }
 
     /**
-     * Deletes a user from the database.
-     *
-     * This method uses the UserRepositoryI's deleteById method to remove the user
-     * with the provided id from the database. If there is no user with the given
-     * id in the database, the JpaRepository's deleteById method throws an
-     * EmptyResultDataAccessException. The handling of this exception can be done
-     * where this service method is called, typically in the UserController.
+     * Deletes a user from the database. It uses the UserRepositoryI's deleteById method
+     * to remove the user with the provided id from the database. If there is no user with the given
+     * id in the database, it simply returns without throwing an exception. The handling of non-existent
+     * users can be done where this service method is called, typically in the UserController.
      *
      * @param id The id of the user to delete.
      */
