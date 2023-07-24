@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 // TODO 1. Integrate this exception handling into service layer
 // TODO 2. Test for error: "500 Internal Server Error" again in postman
 // TODO 3. Create and implement ErrorResponse class, instantiate and use in handleUserNotFoundException instead of UserException.
+//     TODO 3a. Refactor UserException class, keeping HttpStatus field
+//     TODO 3b. UserNotFoundException ... 
+//     TODO 3c. UserExceptionHandler ...
+//     TODO 3d. UserExceptionHandler ... @ExceptionHandler..
+//     TODO 3e. Error Response w/ message & httpStatus
 // TODO 4. Repeat TODO 2.
 @ControllerAdvice
 public class UserExceptionHandler {
