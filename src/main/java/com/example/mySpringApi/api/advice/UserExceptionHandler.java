@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * controller classes. The goal is to have a consistent error response structure throughout the application.
  *
  * Specific types of exceptions can be handled by adding more methods annotated with @ExceptionHandler.
+ *
+ * TODO: Create specific handler methods for other exceptions like UserAlreadyExistsException,
+ * TODO: InvalidUserInputException, etc. with appropriate HTTP status codes.
  */
 @ControllerAdvice
 public class UserExceptionHandler {

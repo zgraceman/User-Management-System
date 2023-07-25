@@ -16,6 +16,8 @@ import java.util.Optional;
  *
  * - save(User user): Persists the provided User entity to the database. If the User already exists,
  *   its existing record will be updated; otherwise, a new record will be created. Returns the persisted User.
+ *
+ * TODO: Implement error handling in the repository layer for potential database exceptions.
  */
 public interface UserRepositoryI extends JpaRepository<User, Integer> {
 

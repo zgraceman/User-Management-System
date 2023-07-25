@@ -3,7 +3,6 @@ package com.example.mySpringApi.service;
 import com.example.mySpringApi.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * UserServiceI is the interface for the user service, defining the contract for the user service

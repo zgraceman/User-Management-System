@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(Integer id) {
         log.info("getting a user from the database via id");
+        // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 
@@ -68,6 +69,7 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(String name) {
         log.info("getting a user from the database via name");
+        // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
 

@@ -47,6 +47,7 @@ public class UserController {
      */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
+        // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(id);
     }
 
@@ -57,6 +58,7 @@ public class UserController {
      */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
+        // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(name);
     }
 
@@ -134,6 +136,8 @@ public class UserController {
      */
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
+        // TODO: Return an appropriate HTTP error status (like 404 NOT FOUND)
+        // TODO: if the UserService's deleteUser method throws an EmptyResultDataAccessException.
         userServiceI.deleteUser(id);
         return ResponseEntity.ok().build();
     }
