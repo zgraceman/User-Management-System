@@ -10,31 +10,19 @@ import org.springframework.http.HttpStatus;
  *
  * TODO: Integrate Lombok to reduce boilerplate code
  */
-public class UserException {
+public class UserException extends RuntimeException {
 
-    private final String message;
-    private final Throwable throwable;
     private final HttpStatus httpStatus;
 
     /**
-     * Constructs a new UserException with specified detail message, exception and HTTP status code.
+     * Constructs a new UserException with specified detail message and HTTP status code.
      *
      * @param message The detail message (which is saved for later retrieval by the Throwable.getMessage() method).
-     * @param throwable The exception that caused this exception to be thrown (which is saved for later retrieval by the Throwable.getCause() method).
      * @param httpStatus The HTTP status code that is suitable for this exception (which is saved for later retrieval by the getHttpStatus() method).
      */
-    public UserException(String message, Throwable throwable, HttpStatus httpStatus) {
-        this.message = message;
-        this.throwable = throwable;
+    public UserException(String message, HttpStatus httpStatus) {
+        super(message);
         this.httpStatus = httpStatus;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
     }
 
     public HttpStatus getHttpStatus() {
