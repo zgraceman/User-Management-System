@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserServiceI {
      * @throws UserNotFoundException If the User with the provided ID does not exist.
      */
     public User getUser(Integer id) {
-        log.info("getting a user from the database via id");
+        log.info("(getUser(Integer id) service method) Getting a user from the database via id");
         // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserServiceI {
      * TODO: Consider whether multiple users could have the same name and how to handle such situations.
      */
     public User getUser(String name) {
-        log.info("getting a user from the database via name");
+        log.info("(getUser(String name) service method) Getting a user from the database via name");
         // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserServiceI {
      * TODO: Add creation-specific logic or validation
      */
     public User createUser(User user) {
-        log.warn("Saving new user to the database");
+        log.warn("(createUser service method) Saving new user to the database");
         return userRepositoryI.save(user);
     }
 
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserServiceI {
      * @throws EntityNotFoundException if the User object does not exist in the database.
      */
     public User updateUser(User user) {
-        log.warn("Updated a user from the database");
+        log.warn("(updateUser service method) Updated a user from the database");
 
         // ensures the user exists before updating
         if (!userRepositoryI.existsById(user.getId())) {
@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserServiceI {
      * @param id The id of the user to delete.
      */
     public void deleteUser(int id) {
-        log.warn("Deleting user from the database");
+        log.warn("(deleterUser service method) Deleting user from the database");
         userRepositoryI.deleteById(id);
     }
 
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserServiceI {
      */
     @Override
     public List<User> getAllUsers() {
-        log.info("Getting all users from the database");
+        log.info("(getAllUsers service method) Getting all users from the database");
         return userRepositoryI.findAll();
     }
 }
