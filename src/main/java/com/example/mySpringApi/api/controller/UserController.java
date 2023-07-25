@@ -2,6 +2,7 @@ package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserServiceI;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/userAPI")
+@Slf4j
 public class UserController {
 
     private UserServiceI userServiceI;
@@ -47,6 +49,7 @@ public class UserController {
      */
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
+        log.info("I am in the getUser /id/{id} controller method");
         // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(id);
     }
@@ -58,6 +61,7 @@ public class UserController {
      */
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
+        log.info("I am in the getUser /name/{name} controller method");
         // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(name);
     }
@@ -72,6 +76,7 @@ public class UserController {
      */
     @GetMapping
     public List<User> getAllUsers() {
+        log.info("I am in the getAllUsers controller method");
         return userServiceI.getAllUsers();
     }
 
@@ -90,6 +95,7 @@ public class UserController {
      */
     @PostMapping("/createUser")
     public User createUser(@RequestBody User user) {
+        log.warn("I am in the createUser controller method");
         return userServiceI.createUser(user);
     }
 
@@ -112,6 +118,7 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public User updateUser(@RequestBody User user) {
+        log.warn("I am in the updateUser controller method");
         return userServiceI.updateUser(user);
     }
 
@@ -136,6 +143,7 @@ public class UserController {
      */
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
+        log.warn("I am in the deleteUser /deleteUser/{id} controller method");
         // TODO: Return an appropriate HTTP error status (like 404 NOT FOUND)
         // TODO: if the UserService's deleteUser method throws an EmptyResultDataAccessException.
         userServiceI.deleteUser(id);
