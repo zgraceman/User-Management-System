@@ -1,5 +1,6 @@
 package com.example.mySpringApi.service;
 
+import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepositoryI;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,33 +43,32 @@ public class UserServiceImpl implements UserServiceI {
      * Fetches a User by their ID from the UserRepository.
      *
      * This method interacts with the UserRepository to fetch a User based on the provided ID. The `findById` method
-     * of the UserRepository returns an Optional<User>. In this case, we are using the `get()` method to retrieve
-     * the User object directly. Currently, this operation can potentially lead to a NoSuchElementException if the User
-     * does not exist.
-     *
-     * It's recommended to handle such potential exceptions appropriately.
+     * of the UserRepository returns an Optional<User>. In this case, we are using the `orElseThrow()` method to retrieve
+     * the User object if it exists, or throw a UserNotFoundException if the User does not exist.
      *
      * @param id The ID of the User to be fetched.
      * @return The User object associated with the provided ID.
+     * @throws UserNotFoundException If the User with the provided ID does not exist.
      */
     public User getUser(Integer id) {
         log.info("getting a user from the database via id");
-        return userRepositoryI.findById(id).get();
+        return userRepositoryI.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 
     /**
-     * Retrieves a User by name from the list. Returns an Optional<User> that contains
-     * the found User, or is empty if no User with the provided name is found.
+     * Retrieves a User by name from the UserRepository. Returns the found User,
+     * or throws a UserNotFoundException if no User with the provided name is found.
      *
      * @param name the name of the User to retrieve
      * @return The User object associated with the provided name.
+     * @throws UserNotFoundException If the User with the provided name does not exist.
      *
      * TODO: Add handling for partial matches in user name search.
      * TODO: Consider whether multiple users could have the same name and how to handle such situations.
      */
     public User getUser(String name) {
         log.info("getting a user from the database via name");
-        return userRepositoryI.findByName(name).get();
+        return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
 
 
