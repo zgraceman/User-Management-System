@@ -18,6 +18,8 @@ import lombok.Setter;
  * @Setter: Lombok's annotation to generate setters for all fields.
  * @NoArgsConstructor: Lombok's annotation to generate a no-args constructor.
  * @Table(name="user_info"): Specifies the name of the database table to be used.
+ *
+ * TODO: Condier ensuring name and email address uniqueness in the database
  */
 @Entity
 @Getter

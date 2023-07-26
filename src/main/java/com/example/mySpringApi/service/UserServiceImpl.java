@@ -20,6 +20,7 @@ import java.util.Optional;
  *
  * This service class uses UserRepositoryI for data access.
  *
+ * TODO: Validate that the user making the request has the necessary permissions.
  */
 @Service
 @Slf4j
@@ -84,7 +85,8 @@ public class UserServiceImpl implements UserServiceI {
      * made to the User object by the database, such as the automatically generated ID for
      * a new User.
      *
-     * TODO: Add creation-specific logic or validation
+     * TODO: Consider implementing validation checks, such as ensuring that the name and email are not already in use.
+     * TODO: Add error handling for save() operation.
      */
     public User createUser(User user) {
         log.warn("(createUser service method) Saving new user to the database");
@@ -105,6 +107,9 @@ public class UserServiceImpl implements UserServiceI {
      * @return the User object that was updated in the database. This will include any changes
      * made to the User object by the database.
      * @throws EntityNotFoundException if the User object does not exist in the database.
+     *
+     * TODO: Consider implementing validation checks, such as ensuring that the name and email are not already in use.
+     * TODO: Add error handling for save() operation.
      */
     public User updateUser(User user) {
         log.warn("(updateUser service method) Updated a user from the database");

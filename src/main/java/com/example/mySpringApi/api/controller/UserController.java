@@ -50,7 +50,6 @@ public class UserController {
     @GetMapping("/id/{id}")
     public User getUser(@PathVariable int id) {
         log.info("I am in the getUser /id/{id} controller method");
-        // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(id);
     }
 
@@ -62,7 +61,6 @@ public class UserController {
     @GetMapping("/name/{name}")
     public User getUser(@PathVariable String name) {
         log.info("I am in the getUser /name/{name} controller method");
-        // TODO: Return appropriate HTTP status code when a UserNotFoundException is thrown.
         return userServiceI.getUser(name);
     }
 

@@ -18,6 +18,7 @@ import java.util.Optional;
  *   its existing record will be updated; otherwise, a new record will be created. Returns the persisted User.
  *
  * TODO: Implement error handling in the repository layer for potential database exceptions.
+ * TODO: Consider adding a method to check if a user with the same name or email already exists.
  */
 public interface UserRepositoryI extends JpaRepository<User, Integer> {
 

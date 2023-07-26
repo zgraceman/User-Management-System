@@ -53,6 +53,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
      *
      * @param args Command line arguments.
      * @throws Exception If an error occurs during execution.
+     *
+     * TODO: Add checks to ensure that users with the same names or emails are not added to the database.
      */
     @Override
     public void run(String... args) throws Exception {
