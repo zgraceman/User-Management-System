@@ -2,6 +2,7 @@ package com.example.mySpringApi.api.advice;
 
 import com.example.mySpringApi.api.response.ErrorResponse;
 import com.example.mySpringApi.exception.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * TODO: InvalidUserInputException, etc. with appropriate HTTP status codes.
  */
 @ControllerAdvice
+@Slf4j
 public class UserExceptionHandler {
 
     /**
@@ -31,6 +33,9 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(value = {UserNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
+
+        log.error("User not found. Stack Trace -->", userNotFoundException);
+
         ErrorResponse errorResponse = new ErrorResponse(
                 userNotFoundException.getMessage(),
                 userNotFoundException.getHttpStatus()

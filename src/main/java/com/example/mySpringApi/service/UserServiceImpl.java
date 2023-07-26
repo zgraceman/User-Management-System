@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserServiceI {
      * @param id The id of the user to delete.
      */
     public void deleteUser(int id) {
-        log.warn("(deleterUser service method) Deleting user from the database");
+        log.warn("(deleteUser service method) Deleting user from the database");
         userRepositoryI.deleteById(id);
     }
 

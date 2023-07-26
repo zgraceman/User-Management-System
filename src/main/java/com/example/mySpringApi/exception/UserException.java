@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
  * It contains information about the error including a message,
  * the exception that caused this exception to be thrown, and the associated HTTP status code.
  *
- * TODO: Integrate Lombok to reduce boilerplate code
  */
 public class UserException extends RuntimeException {
 
