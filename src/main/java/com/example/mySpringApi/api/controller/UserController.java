@@ -1,9 +1,11 @@
 package com.example.mySpringApi.api.controller;
 
+import com.example.mySpringApi.api.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserServiceI;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,9 +94,9 @@ public class UserController {
      * @return The User object saved in the database, including any updates made by the database.
      */
     @PostMapping("/createUser")
-    public User createUser(@RequestBody User user) {
-        log.warn("I am in the createUser controller method");
-        return userServiceI.createUser(user);
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
+        User createdUser = userServiceI.createUser(user);
+        return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
     }
 
     /**
