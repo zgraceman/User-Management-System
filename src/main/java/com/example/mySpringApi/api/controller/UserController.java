@@ -47,37 +47,39 @@ public class UserController {
     /**
      * Retrieves a User by ID.
      * @param id the ID of the User to retrieve
-     * @return the User object if found ...
+     * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
     @GetMapping("/id/{id}")
-    public User getUser(@PathVariable int id) {
-        log.info("I am in the getUser /id/{id} controller method");
-        return userServiceI.getUser(id);
+    public ResponseEntity<Object> getUser(@PathVariable int id) {
+        User user = userServiceI.getUser(id);
+        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 
     /**
      * Retrieves a User by name.
      * @param name the name of the User to retrieve
-     * @return the User object if found; null otherwise
+     * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
     @GetMapping("/name/{name}")
-    public User getUser(@PathVariable String name) {
+    public ResponseEntity<Object> getUser(@PathVariable String name) {
         log.info("I am in the getUser /name/{name} controller method");
-        return userServiceI.getUser(name);
+        User user = userServiceI.getUser(name);
+        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 
     /**
      * Fetches all Users.
      *
      * This method handles GET requests at the "/userAPI" endpoint. It returns a list of all
-     * users from the data store or an empty list if no users exist.
+     * users from the data store or an appropriate error response if no users exist.
      *
-     * @return List of all User objects or an empty list.
+     * @return a ResponseEntity that includes the list of all User objects or an appropriate error response.
      */
     @GetMapping
-    public List<User> getAllUsers() {
+    public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
-        return userServiceI.getAllUsers();
+        List<User> users = userServiceI.getAllUsers();
+        return ResponseHandler.generateResponse("All users fetched", HttpStatus.OK, users);
     }
 
     /**
@@ -88,13 +90,14 @@ public class UserController {
      * This User object is then passed to the createUser method of the UserService, which
      * saves the user to the database. The User object saved in the database, including
      * any updates made by the database (like the generated ID for a new user), is returned
-     * in the HTTP response body.
+     * in a structured response along with a message and HTTP status code.
      *
      * @param user A User object contained in the request body.
-     * @return The User object saved in the database, including any updates made by the database.
+     * @return a ResponseEntity that includes the User object saved in the database, a message, and an HTTP status code.
      */
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
+        log.warn("I am in the createUser controller method");
         User createdUser = userServiceI.createUser(user);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
     }
@@ -107,19 +110,20 @@ public class UserController {
      * User object should have an ID that corresponds to an existing user in the database.
      * This User object is then passed to the updateUser method of the UserService, which
      * updates the user in the database. The updated User object, including any changes
-     * made during the update, is returned in the HTTP response body.
+     * made during the update, is returned in a structured response along with a message and HTTP status code.
      *
      * If a User with the specified ID does not exist in the database, the updateUser method
      * throws an EntityNotFoundException.
      *
      * @param user A User object that is included in the request body. This should include
      *             the ID of the user to be updated.
-     * @return The updated User object, including any changes made during the update.
+     * @return a ResponseEntity that includes the updated User object, a message, and an HTTP status code.
      */
     @PutMapping("/updateUser")
-    public User updateUser(@RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@RequestBody User user) {
         log.warn("I am in the updateUser controller method");
-        return userServiceI.updateUser(user);
+        User updatedUser = userServiceI.updateUser(user);
+        return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, updatedUser);
     }
 
     /**
@@ -130,23 +134,22 @@ public class UserController {
      * This id is then passed to the deleteUser method of the UserService, which deletes
      * the user with the corresponding id from the database.
      *
-     * The method returns an HTTP 200 OK status in the response to indicate that
+     * The method returns a structured response with a message and HTTP 200 OK status in the response to indicate that
      * the user was successfully deleted.
      *
      * If the UserService's deleteUser method throws an EmptyResultDataAccessException
      * (because there is no user with the given id in the database), this method
-     * should catch that exception and return an appropriate HTTP error status
-     * (like 404 NOT FOUND).
+     * should catch that exception and return an appropriate error response.
      *
      * @param id The id of the user to delete, included in the path of the request.
-     * @return A ResponseEntity with an HTTP status code.
+     * @return A ResponseEntity with a message, HTTP status code, and no data.
      */
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable int id) {
         log.warn("I am in the deleteUser /deleteUser/{id} controller method");
         // TODO: Return an appropriate HTTP error status (like 404 NOT FOUND)
         // TODO: if the UserService's deleteUser method throws an EmptyResultDataAccessException.
         userServiceI.deleteUser(id);
-        return ResponseEntity.ok().build();
+        return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
 }
