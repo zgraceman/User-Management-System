@@ -1,6 +1,8 @@
 package com.example.mySpringApi.api.advice;
 
 import com.example.mySpringApi.api.response.ResponseHandler;
+import com.example.mySpringApi.exception.InvalidUserInputException;
+import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,42 @@ public class UserExceptionHandler {
         return ResponseHandler.generateResponse(
                 userNotFoundException.getMessage(),
                 userNotFoundException.getHttpStatus(),
+                null // pass null or any other relevant data in case of an exception
+        );
+    }
+
+    /**
+     * Handles UserAlreadyExistsException thrown in the application.
+     *
+     * @param ex The UserAlreadyExistsException that was thrown.
+     * @return A ResponseEntity containing the standard API error response and the HTTP status.
+     */
+    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    public ResponseEntity<Object> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+
+        log.error("User already exists. Stack Trace -->", ex);
+
+        return ResponseHandler.generateResponse(
+                ex.getMessage(),
+                ex.getHttpStatus(),
+                null // pass null or any other relevant data in case of an exception
+        );
+    }
+
+    /**
+     * Handles InvalidUserInputException thrown in the application.
+     *
+     * @param ex The InvalidUserInputException that was thrown.
+     * @return A ResponseEntity containing the standard API error response and the HTTP status.
+     */
+    @ExceptionHandler(value = {InvalidUserInputException.class})
+    public ResponseEntity<Object> handleInvalidUserInputException(InvalidUserInputException ex) {
+
+        log.error("Invalid user input. Stack Trace -->", ex);
+
+        return ResponseHandler.generateResponse(
+                ex.getMessage(),
+                ex.getHttpStatus(),
                 null // pass null or any other relevant data in case of an exception
         );
     }
