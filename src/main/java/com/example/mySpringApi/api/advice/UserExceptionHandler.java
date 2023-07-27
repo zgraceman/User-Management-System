@@ -1,6 +1,6 @@
 package com.example.mySpringApi.api.advice;
 
-import com.example.mySpringApi.api.response.ErrorResponse;
+import com.example.mySpringApi.api.response.ResponseHandler;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * This class leverages Spring's @ControllerAdvice annotation to provide a centralized exception handling across all
  * controller classes. The goal is to have a consistent error response structure throughout the application.
  *
+ * This class now uses the ResponseHandler for generating error responses in a standard structure.
+ * This enhances the consistency of all API responses, not just for the successful ones but also for the error scenarios.
+ *
  * Specific types of exceptions can be handled by adding more methods annotated with @ExceptionHandler.
  *
  * TODO: Create specific handler methods for other exceptions like UserAlreadyExistsException,
@@ -25,22 +28,20 @@ public class UserExceptionHandler {
 
     /**
      * Handles UserNotFoundExceptions thrown in the application.
-     * It builds an ErrorResponse object using the message and HTTP status from the exception
-     * and returns it in the body of a ResponseEntity.
+     * It generates a standard API response using the ResponseHandler by passing the error message and HTTP status from the exception.
      *
      * @param userNotFoundException The UserNotFoundException that was thrown.
-     * @return A ResponseEntity containing the ErrorResponse and the HTTP status.
+     * @return A ResponseEntity containing the standard API error response and the HTTP status.
      */
     @ExceptionHandler(value = {UserNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException userNotFoundException) {
 
         log.error("User not found. Stack Trace -->", userNotFoundException);
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        return ResponseHandler.generateResponse(
                 userNotFoundException.getMessage(),
-                userNotFoundException.getHttpStatus()
+                userNotFoundException.getHttpStatus(),
+                null // pass null or any other relevant data in case of an exception
         );
-
-        return new ResponseEntity<>(errorResponse, userNotFoundException.getHttpStatus());
     }
 }
