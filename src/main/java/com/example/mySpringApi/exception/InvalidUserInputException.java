@@ -10,9 +10,11 @@ import org.springframework.http.HttpStatus;
 public class InvalidUserInputException extends UserException {
 
     /**
-     * Creates a new instance of InvalidUserInputException.
+     * Constructor for creating a new InvalidUserInputException.
+     *
+     * @param message The detail message, saved for later retrieval by the Throwable.getMessage() method.
      */
-    public InvalidUserInputException() {
-        super("Invalid user input", HttpStatus.BAD_REQUEST);
+    public InvalidUserInputException(String message) {
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

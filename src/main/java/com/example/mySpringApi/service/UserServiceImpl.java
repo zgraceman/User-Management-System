@@ -1,5 +1,7 @@
 package com.example.mySpringApi.service;
 
+import com.example.mySpringApi.exception.InvalidUserInputException;
+import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepositoryI;
@@ -74,22 +76,30 @@ public class UserServiceImpl implements UserServiceI {
         return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
 
-
     /**
-     * Creates a new User object in the database. It accepts a User object,
-     * logs the action, then saves the User object in the database using the save() method
-     * of the UserRepositoryI interface.
+     * Creates a new user.
      *
-     * @param user - A User object to be saved in the database.
-     * @return the User object that was saved in the database. This will include any changes
-     * made to the User object by the database, such as the automatically generated ID for
-     * a new User.
+     * @param user User object containing the details of the new user to be created.
+     * @return The created User object.
+     * @throws UserAlreadyExistsException If a user with the same name already exists in the system.
+     * @throws InvalidUserInputException If the provided user details are not valid.
      *
-     * TODO: Consider implementing validation checks, such as ensuring that the name and email are not already in use.
      * TODO: Add error handling for save() operation.
      */
     public User createUser(User user) {
         log.warn("(createUser service method) Saving new user to the database");
+
+        // Checks if a user already exists with the same email
+        User existingUser = userRepositoryI.findByEmail(user.getEmail()).orElse(null);
+        if (existingUser != null) {
+            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
+        }
+
+        // Add validation here and throw InvalidUserInputException if the user object is not valid
+        if (!isValidUser(user)) {
+            throw new InvalidUserInputException("The provided user details are invalid.");
+        }
+
         return userRepositoryI.save(user);
     }
 
@@ -143,5 +153,11 @@ public class UserServiceImpl implements UserServiceI {
     public List<User> getAllUsers() {
         log.info("(getAllUsers service method) Getting all users from the database");
         return userRepositoryI.findAll();
+    }
+
+    private boolean isValidUser(User user) {
+        // Implement your user validation logic here
+        // For example, check if the user's name and email are not null
+        return user.getName() != null && user.getEmail() != null;
     }
 }

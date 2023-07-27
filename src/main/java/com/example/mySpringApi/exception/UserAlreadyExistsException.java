@@ -7,12 +7,14 @@ import org.springframework.http.HttpStatus;
  *
  * The HTTP status is set to CONFLICT because the request could not be completed due to a conflict with the current state of the target resource.
  */
-public class UserAlreadyExistsException extends UserException{
+public class UserAlreadyExistsException extends UserException {
 
     /**
-     * Creates a new instance of UserAlreadyExistsException.
+     * Constructor for creating a new UserAlreadyExistsException.
+     *
+     * @param message The detail message, saved for later retrieval by the Throwable.getMessage() method.
      */
-    public UserAlreadyExistsException() {
-        super("User already exists", HttpStatus.CONFLICT);
+    public UserAlreadyExistsException(String message) {
+        super(message, HttpStatus.CONFLICT);
     }
 }
