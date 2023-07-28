@@ -1,6 +1,6 @@
 package com.example.mySpringApi.api.controller;
 
-import com.example.mySpringApi.api.response.ResponseHandler;
+import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserServiceI;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * UserController is a REST controller that exposes endpoints for interacting with User resources.

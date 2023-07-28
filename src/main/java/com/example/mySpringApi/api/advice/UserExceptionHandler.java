@@ -1,6 +1,6 @@
 package com.example.mySpringApi.api.advice;
 
-import com.example.mySpringApi.api.response.ResponseHandler;
+import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;

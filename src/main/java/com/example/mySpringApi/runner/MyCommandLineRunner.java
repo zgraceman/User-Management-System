@@ -1,4 +1,4 @@
-package com.example.mySpringApi;
+package com.example.mySpringApi.runner;
 
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepositoryI;

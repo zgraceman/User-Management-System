@@ -1,4 +1,4 @@
-package com.example.mySpringApi.api.response;
+package com.example.mySpringApi.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
