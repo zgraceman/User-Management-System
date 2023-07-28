@@ -23,4 +23,14 @@ public class UserNotFoundException extends UserException {
     public UserNotFoundException() {
         super("User not found", HttpStatus.NOT_FOUND);
     }
+
+    /**
+     * Constructs a new UserNotFoundException with a custom detail message and a preset HTTP status code.
+     *
+     * The HTTP status code is HttpStatus.NOT_FOUND, indicating that the requested resource is not available.
+     * @param customMessage the detail message of the exception
+     */
+    public UserNotFoundException(String customMessage) {
+        super(customMessage, HttpStatus.NOT_FOUND);
+    }
 }

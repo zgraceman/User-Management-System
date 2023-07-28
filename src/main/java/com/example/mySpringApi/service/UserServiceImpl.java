@@ -140,8 +140,15 @@ public class UserServiceImpl implements UserServiceI {
      * @param id The id of the user to delete.
      */
     public void deleteUser(int id) {
-        log.warn("(deleteUser service method) Deleting user from the database");
+        log.warn("(deleteUser service method) Attempting to delete a user from the database");
+
+        // Check if user exists before trying to delete
+        if (!userRepositoryI.existsById(id)) {
+            throw new UserNotFoundException("User not found with id " + id);
+        }
+
         userRepositoryI.deleteById(id);
+        log.warn("(deleteUser service method) User with id " + id + " deleted successfully");
     }
 
     /**
@@ -155,9 +162,15 @@ public class UserServiceImpl implements UserServiceI {
         return userRepositoryI.findAll();
     }
 
+    /**
+     * Private helper method to validate a User object.
+     * This method checks whether the provided User object is valid based on the business rules.
+     * Currently, it checks if the user's name and email are not null.
+     *
+     * @param user The User object to be validated.
+     * @return boolean indicating whether the User object is valid (true) or not (false).
+     */
     private boolean isValidUser(User user) {
-        // Implement your user validation logic here
-        // For example, check if the user's name and email are not null
         return user.getName() != null && user.getEmail() != null;
     }
 }
