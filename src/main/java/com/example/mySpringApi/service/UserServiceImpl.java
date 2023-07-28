@@ -106,38 +106,54 @@ public class UserServiceImpl implements UserServiceI {
     /**
      * Updates an existing User object in the database. It accepts a User object
      * and first checks if the User object exists in the database using the existsById() method
-     * of the UserRepositoryI interface. If the User object does not exist, an EntityNotFoundException
+     * of the UserRepositoryI interface. If the User object does not exist, a UserNotFoundException
      * is thrown.
      *
-     * If the User object does exist, then the User object is updated in the database using the
+     * It also checks if the user's email is already in use by another user. If it is, a UserAlreadyExistsException is thrown.
+     *
+     * It also checks if the provided User object is valid, if not, it throws an InvalidUserInputException.
+     *
+     * If the User object does exist and passes the checks, then the User object is updated in the database using the
      * save() method of the UserRepositoryI interface.
      *
      * @param user - A User object to be updated in the database. This User object should already
      * exist in the database and have a valid ID.
      * @return the User object that was updated in the database. This will include any changes
      * made to the User object by the database.
-     * @throws EntityNotFoundException if the User object does not exist in the database.
-     *
-     * TODO: Consider implementing validation checks, such as ensuring that the name and email are not already in use.
-     * TODO: Add error handling for save() operation.
+     * @throws UserNotFoundException if the User object does not exist in the database.
+     * @throws UserAlreadyExistsException if a user already exists with the provided email.
+     * @throws InvalidUserInputException if the provided user details are invalid.
      */
     public User updateUser(User user) {
         log.warn("(updateUser service method) Updated a user from the database");
 
         // ensures the user exists before updating
         if (!userRepositoryI.existsById(user.getId())) {
-            throw new EntityNotFoundException("User not found with id " + user.getId());
+            throw new UserNotFoundException("User not found with id " + user.getId());
         }
+
+        // Checks if a user already exists with the same email
+        User existingUser = userRepositoryI.findByEmail(user.getEmail()).orElse(null);
+        if (existingUser != null) {
+            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
+        }
+
+        // Add validation here and throw InvalidUserInputException if the user object is not valid
+        if (!isValidUser(user)) {
+            throw new InvalidUserInputException("The provided user details are invalid.");
+        }
+
         return userRepositoryI.save(user);
     }
 
     /**
      * Deletes a user from the database. It uses the UserRepositoryI's deleteById method
      * to remove the user with the provided id from the database. If there is no user with the given
-     * id in the database, it simply returns without throwing an exception. The handling of non-existent
-     * users can be done where this service method is called, typically in the UserController.
+     * id in the database, it throws a UserNotFoundException. This exception should be handled where
+     * this service method is called, typically in the UserController.
      *
      * @param id The id of the user to delete.
+     * @throws UserNotFoundException If the User with the provided id does not exist.
      */
     public void deleteUser(int id) {
         log.warn("(deleteUser service method) Attempting to delete a user from the database");
