@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * UserServiceImpl is a service class that implements the UserServiceI interface.
@@ -55,7 +57,6 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(Integer id) {
         log.info("(getUser(Integer id) service method) Getting a user from the database via id");
-        // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 
@@ -72,7 +73,6 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(String name) {
         log.info("(getUser(String name) service method) Getting a user from the database via name");
-        // TODO: Log an error message when a UserNotFoundException is thrown.
         return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
 
@@ -181,12 +181,35 @@ public class UserServiceImpl implements UserServiceI {
     /**
      * Private helper method to validate a User object.
      * This method checks whether the provided User object is valid based on the business rules.
-     * Currently, it checks if the user's name and email are not null.
+     * It checks if the user's name and email are not null, if the name length is acceptable,
+     * if the email is in a valid format and if they are not empty strings.
      *
      * @param user The User object to be validated.
      * @return boolean indicating whether the User object is valid (true) or not (false).
      */
     private boolean isValidUser(User user) {
-        return user.getName() != null && user.getEmail() != null;
+        if (user.getName() == null || user.getEmail() == null) {
+            return false;
+        }
+
+        String trimmedName = user.getName().trim();
+        String trimmedEmail = user.getEmail().trim();
+
+        // Check for empty strings
+        if (trimmedName.isEmpty() || trimmedEmail.isEmpty()) {
+            return false;
+        }
+
+        // Check for name length
+        if (trimmedName.length() < 3 || trimmedName.length() > 50) {
+            return false;
+        }
+
+        // Check for valid email format
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(trimmedEmail);
+
+        return matcher.matches();
     }
 }
