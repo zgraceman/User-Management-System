@@ -17,4 +17,8 @@ public class UserAlreadyExistsException extends UserException {
     public UserAlreadyExistsException(String message) {
         super(message, HttpStatus.CONFLICT);
     }
+
+    public UserAlreadyExistsException(String message, Throwable cause) {
+        super(message, cause, HttpStatus.CONFLICT);
+    }
 }
