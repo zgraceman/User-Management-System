@@ -19,7 +19,7 @@ import lombok.Setter;
  * @NoArgsConstructor: Lombok's annotation to generate a no-args constructor.
  * @Table(name="user_info"): Specifies the name of the database table to be used.
  *
- * TODO: Condier ensuring name and email address uniqueness in the database
+ * TODO: Consider ensuring name and email address uniqueness in the database
  */
 @Entity
 @Getter
@@ -31,11 +31,13 @@ public class User {
     // Fields
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    
     private String name;
-    private int age;
+
+    @Column(unique = true)
     private String email;
 
+    private int age;
 
     /**
      * Constructs a new User with the given parameters.
