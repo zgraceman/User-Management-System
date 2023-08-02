@@ -79,59 +79,76 @@ public class UserServiceImpl implements UserServiceI {
     }
 
     /**
-     * Creates a new user. If the provided user details are invalid, an InvalidUserInputException is thrown.
-     * If a user with the same email already exists in the system, a UserAlreadyExistsException is thrown.
+     * This method is responsible for creating a new User object and saving it to the database.
      *
-     * @param user User object containing the details of the new user to be created.
-     * @return The created User object.
-     * @throws UserAlreadyExistsException If a user with the same email already exists in the system.
-     * @throws InvalidUserInputException If the provided user details are not valid.
-     * @throws DataIntegrityViolationException If there's an attempt to save a user with an email that already exists in the system.
+     * Initially, it checks the validity of the provided user details. If the details are found to be invalid, an InvalidUserInputException is thrown.
+     * Then, it verifies whether a user with the same email already exists in the system. If such a user exists, it throws a UserAlreadyExistsException.
+     * Finally, it attempts to save the new user to the database. In the event of a data integrity violation (for instance, due to a duplicate email), it catches the DataIntegrityViolationException and rethrows it as a RuntimeException.
+     *
+     * @param user - The User object containing details of the new user to be created. It should include all required information.
+     * @return Returns the User object that was created and saved in the database.
+     * @throws InvalidUserInputException - Thrown when the provided user details are not valid.
+     * @throws UserAlreadyExistsException - Thrown when a user with the same email already exists in the system.
+     * @throws RuntimeException - Thrown when there's a failure in saving the user to the database due to data integrity violations, such as a duplicate email.
      */
     @Transactional
     public User createUser(User user) {
         log.warn("(createUser service method) Saving new user to the database");
 
-        // Add validation here and throw InvalidUserInputException if the user object is not valid
         if (!isValidUser(user)) {
             throw new InvalidUserInputException("The provided user details are invalid.");
+        }
+
+        // Check if a user with the same email exists
+        Optional<User> existingUser = userRepositoryI.findByEmail(user.getEmail());
+
+        if(existingUser.isPresent()){
+            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
 
         try {
             return userRepositoryI.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.", e);
+            throw new RuntimeException("Could not save the user to the database", e);
         }
     }
 
     /**
-     * Updates an existing User object in the database. If the User object does not exist in the database, a UserNotFoundException is thrown.
-     * If the provided user details are invalid, an InvalidUserInputException is thrown.
-     * If a user with the same email already exists in the system, a UserAlreadyExistsException is thrown.
+     * This method updates a pre-existing User object in the database. The User object to be updated should already exist in the database, identified by a valid ID.
      *
-     * @param user - A User object to be updated in the database. This User object should already exist in the database and have a valid ID.
-     * @return the User object that was updated in the database. This will include any changes made to the User object by the database.
-     * @throws UserNotFoundException if the User object does not exist in the database.
-     * @throws UserAlreadyExistsException If a user with the same email already exists in the system.
-     * @throws InvalidUserInputException If the provided user details are not valid.
-     * @throws DataIntegrityViolationException If there's an attempt to save a user with an email that already exists in the system.
+     * It first checks whether the user exists in the database. If it doesn't, it throws a UserNotFoundException.
+     * It then verifies the validity of the provided user details. If the details are invalid, it throws an InvalidUserInputException.
+     * Subsequently, it checks whether there is an existing user with the same email (excluding the current user). If there is, it throws a UserAlreadyExistsException.
+     * Finally, it tries to save the user object in the database. If the save operation violates data integrity (for example, due to a duplicate email), it catches the DataIntegrityViolationException and wraps it into a RuntimeException.
+     *
+     * @param user - The User object to be updated. This object should have a valid ID and be present in the database.
+     * @return Returns the updated User object, including any changes made by the database.
+     * @throws UserNotFoundException Thrown when the User object does not exist in the database.
+     * @throws InvalidUserInputException Thrown when the provided user details are not valid.
+     * @throws UserAlreadyExistsException Thrown when a user with the same email already exists in the system (excluding the current user).
+     * @throws RuntimeException Thrown when there is a failure in updating the user in the database due to data integrity violations (e.g., duplicate email).
      */
     @Transactional
     public User updateUser(User user) {
-        // Check if the user with the given id exists
+
         if (!userRepositoryI.existsById(user.getId())) {
             throw new UserNotFoundException("User with id " + user.getId() + " does not exist.");
         }
 
-        // Validate user details
         if (!isValidUser(user)) {
             throw new InvalidUserInputException("The provided user details are invalid.");
+        }
+
+        Optional<User> userWithSameEmail = userRepositoryI.findByEmail(user.getEmail());
+
+        if (userWithSameEmail.isPresent() && userWithSameEmail.get().getId() != user.getId()) {
+            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
 
         try {
             return userRepositoryI.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.", e);
+            throw new RuntimeException("Could not update the user in the database", e);
         }
     }
 
