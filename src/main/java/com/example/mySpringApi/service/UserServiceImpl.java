@@ -79,17 +79,21 @@ public class UserServiceImpl implements UserServiceI {
     }
 
     /**
-     * This method is responsible for creating a new User object and saving it to the database.
+     * Creates a new User entity in the database.
      *
-     * Initially, it checks the validity of the provided user details. If the details are found to be invalid, an InvalidUserInputException is thrown.
-     * Then, it verifies whether a user with the same email already exists in the system. If such a user exists, it throws a UserAlreadyExistsException.
-     * Finally, it attempts to save the new user to the database. In the event of a data integrity violation (for instance, due to a duplicate email), it catches the DataIntegrityViolationException and rethrows it as a RuntimeException.
+     * This method checks the validity of the user data before attempting to persist it.
+     * If the user data is invalid, an InvalidUserInputException is thrown.
+     * The method also checks for a pre-existing user with the same email.
+     * If such a user is found, a UserAlreadyExistsException is thrown.
      *
-     * @param user - The User object containing details of the new user to be created. It should include all required information.
-     * @return Returns the User object that was created and saved in the database.
-     * @throws InvalidUserInputException - Thrown when the provided user details are not valid.
-     * @throws UserAlreadyExistsException - Thrown when a user with the same email already exists in the system.
-     * @throws RuntimeException - Thrown when there's a failure in saving the user to the database due to data integrity violations, such as a duplicate email.
+     * The @Transactional annotation ensures that the user creation process is atomic,
+     * thus any failures during the process result in a rollback of the transaction.
+     *
+     * @param user The User object with data for creating a new user. Should include all required information.
+     * @return The created User object saved in the database.
+     * @throws InvalidUserInputException If the provided user details are invalid.
+     * @throws UserAlreadyExistsException If a user with the same email already exists.
+     * @throws RuntimeException If there's a failure in saving the user due to data integrity violation.
      */
     @Transactional
     public User createUser(User user) {
@@ -114,19 +118,25 @@ public class UserServiceImpl implements UserServiceI {
     }
 
     /**
-     * This method updates a pre-existing User object in the database. The User object to be updated should already exist in the database, identified by a valid ID.
+     * Updates a pre-existing User entity in the database.
      *
-     * It first checks whether the user exists in the database. If it doesn't, it throws a UserNotFoundException.
-     * It then verifies the validity of the provided user details. If the details are invalid, it throws an InvalidUserInputException.
-     * Subsequently, it checks whether there is an existing user with the same email (excluding the current user). If there is, it throws a UserAlreadyExistsException.
-     * Finally, it tries to save the user object in the database. If the save operation violates data integrity (for example, due to a duplicate email), it catches the DataIntegrityViolationException and wraps it into a RuntimeException.
+     * This method checks for the existence of the user in the database based on the user ID.
+     * If the user does not exist, a UserNotFoundException is thrown.
      *
-     * @param user - The User object to be updated. This object should have a valid ID and be present in the database.
-     * @return Returns the updated User object, including any changes made by the database.
-     * @throws UserNotFoundException Thrown when the User object does not exist in the database.
-     * @throws InvalidUserInputException Thrown when the provided user details are not valid.
-     * @throws UserAlreadyExistsException Thrown when a user with the same email already exists in the system (excluding the current user).
-     * @throws RuntimeException Thrown when there is a failure in updating the user in the database due to data integrity violations (e.g., duplicate email).
+     * The method also validates the user data before attempting to persist the changes.
+     * If the data is invalid, an InvalidUserInputException is thrown.
+     * It also checks if there's an existing user with the same email (excluding the current user).
+     * If there is, a UserAlreadyExistsException is thrown.
+     *
+     * The @Transactional annotation ensures that the user update process is atomic,
+     * thus any failures during the process result in a rollback of the transaction.
+     *
+     * @param user The User object to be updated. Should include a valid ID.
+     * @return The updated User object, including any changes persisted in the database.
+     * @throws UserNotFoundException If the User object to be updated does not exist in the database.
+     * @throws InvalidUserInputException If the provided user details are invalid.
+     * @throws UserAlreadyExistsException If a user with the same email already exists.
+     * @throws RuntimeException If there's a failure in updating the user due to data integrity violation.
      */
     @Transactional
     public User updateUser(User user) {
