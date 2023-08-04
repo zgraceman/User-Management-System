@@ -2,7 +2,7 @@ package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.service.UserServiceI;
+import com.example.mySpringApi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
  * The @RequestMapping("/userAPI") annotation is used at the class level to map the URL prefix for all handler methods
  * in this class.
  *
- * The UserServiceI is injected into this controller via constructor injection.
+ * The UserService is injected into this controller via constructor injection.
  *
  * Two handler methods are provided for fetching User resources:
  * 1. @GetMapping("/id/{id}") maps to a method which retrieves a User by their ID.
@@ -35,12 +35,12 @@ import java.util.List;
 @Slf4j
 public class UserController {
 
-    private UserServiceI userServiceI;
+    private UserService userService;
 
     // Construct Injection
     @Autowired
-    public UserController(UserServiceI userServiceI) {
-        this.userServiceI = userServiceI;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -50,7 +50,7 @@ public class UserController {
      */
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
-        User user = userServiceI.getUser(id);
+        User user = userService.getUser(id);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 
@@ -62,7 +62,7 @@ public class UserController {
     @GetMapping("/name/{name}")
     public ResponseEntity<Object> getUser(@PathVariable String name) {
         log.info("I am in the getUser /name/{name} controller method");
-        User user = userServiceI.getUser(name);
+        User user = userService.getUser(name);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 
@@ -77,7 +77,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
-        List<User> users = userServiceI.getAllUsers();
+        List<User> users = userService.getAllUsers();
         return ResponseHandler.generateResponse("All users fetched", HttpStatus.OK, users);
     }
 
@@ -97,7 +97,7 @@ public class UserController {
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         log.warn("I am in the createUser controller method");
-        User createdUser = userServiceI.createUser(user);
+        User createdUser = userService.createUser(user);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
     }
 
@@ -121,7 +121,7 @@ public class UserController {
     @PutMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@RequestBody User user) {
         log.warn("I am in the updateUser controller method");
-        User updatedUser = userServiceI.updateUser(user);
+        User updatedUser = userService.updateUser(user);
         return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, updatedUser);
     }
 
@@ -148,7 +148,7 @@ public class UserController {
         log.warn("I am in the deleteUser /deleteUser/{id} controller method");
         // TODO: Return an appropriate HTTP error status (like 404 NOT FOUND)
         // TODO: if the UserService's deleteUser method throws an EmptyResultDataAccessException.
-        userServiceI.deleteUser(id);
+        userService.deleteUser(id);
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
 }

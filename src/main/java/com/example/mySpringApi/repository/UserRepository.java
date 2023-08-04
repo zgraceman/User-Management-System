@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /**
- * UserRepositoryI interface provides the functionality for interacting with
+ * UserRepository interface provides the functionality for interacting with
  * User entities stored in the database. It extends JpaRepository, leveraging Spring Data JPA
  * to generate the implementation code for common operations automatically.
  *
@@ -20,7 +20,7 @@ import java.util.Optional;
  * TODO: Implement error handling in the repository layer for potential database exceptions.
  * TODO: Consider adding a method to check if a user with the same name or email already exists.
  */
-public interface UserRepositoryI extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
     // Methods
     Optional<User> findByName(String name);

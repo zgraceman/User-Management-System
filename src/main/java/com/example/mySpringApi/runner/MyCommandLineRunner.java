@@ -1,7 +1,7 @@
 package com.example.mySpringApi.runner;
 
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.repository.UserRepositoryI;
+import com.example.mySpringApi.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +19,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MyCommandLineRunner implements CommandLineRunner {
 
-    private UserRepositoryI userRepositoryI;
+    private UserRepository userRepository;
 
     /**
-     * Constructor to inject UserRepositoryI bean into MyCommandLineRunner.
+     * Constructor to inject UserRepository bean into MyCommandLineRunner.
      *
-     * @param userRepositoryI User repository bean.
+     * @param userRepository User repository bean.
      */
     @Autowired
-    public MyCommandLineRunner(UserRepositoryI userRepositoryI) {
-        this.userRepositoryI = userRepositoryI;
+    public MyCommandLineRunner(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -59,12 +59,12 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userRepositoryI.count() == 0) {
-            userRepositoryI.save(new User("Zach", 23, "zach@gmail.com"));
-            userRepositoryI.save(new User("Don", 33, "don@gmail.com"));
-            userRepositoryI.save(new User("Michelle", 20, "michelle@gmail.com"));
-            userRepositoryI.save(new User("Janet", 53, "janet@gmail.com"));
-            userRepositoryI.save(new User("Peter", 46, "peter@gmail.com"));
+        if (userRepository.count() == 0) {
+            userRepository.save(new User("Zach", 23, "zach@gmail.com"));
+            userRepository.save(new User("Don", 33, "don@gmail.com"));
+            userRepository.save(new User("Michelle", 20, "michelle@gmail.com"));
+            userRepository.save(new User("Janet", 53, "janet@gmail.com"));
+            userRepository.save(new User("Peter", 46, "peter@gmail.com"));
         }
     }
 }

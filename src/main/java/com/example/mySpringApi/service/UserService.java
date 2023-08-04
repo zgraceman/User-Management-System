@@ -5,7 +5,7 @@ import com.example.mySpringApi.model.User;
 import java.util.List;
 
 /**
- * UserServiceI is the interface for the user service, defining the contract for the user service
+ * UserService is the interface for the user service, defining the contract for the user service
  * to be implemented by any concrete class.
  *
  * The methods include basic CRUD operations for User entities, as well as retrieval
@@ -14,7 +14,7 @@ import java.util.List;
  * This interface should be implemented by a class that interacts with the UserRepository
  * to perform these operations and handle any related business logic.
  */
-public interface UserServiceI {
+public interface UserService {
 
     /**
      * Retrieves a User by ID from the repository.

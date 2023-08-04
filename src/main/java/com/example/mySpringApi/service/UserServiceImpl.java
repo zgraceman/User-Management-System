@@ -4,8 +4,7 @@ import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.repository.UserRepositoryI;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.mySpringApi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,32 +17,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * UserServiceImpl is a service class that implements the UserServiceI interface.
+ * UserServiceImpl is a service class that implements the UserService interface.
  * It provides methods for retrieving, creating, updating and deleting User objects.
  *
  * This class is marked with the @Service annotation, which indicates that it's a Spring
  * service and a candidate for Spring's component scanning to detect and add to the application context.
  *
- * This service class uses UserRepositoryI for data access.
+ * This service class uses UserRepository for data access.
  *
  * TODO: Validate that the user making the request has the necessary permissions.
  */
 @Service
 @Slf4j
-public class UserServiceImpl implements UserServiceI {
+public class UserServiceImpl implements UserService {
 
-    private UserRepositoryI userRepositoryI;
+    private UserRepository userRepository;
 
     private List<User> userList;
 
     /**
-     * Constructs a new UserServiceImpl with a UserRepositoryI.
+     * Constructs a new UserServiceImpl with a UserRepository.
      *
-     * @param userRepositoryI the repository that provides access to the user data store
+     * @param userRepository the repository that provides access to the user data store
      */
     @Autowired
-    public UserServiceImpl(UserRepositoryI userRepositoryI) {
-        this.userRepositoryI = userRepositoryI;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(Integer id) {
         log.info("(getUser(Integer id) service method) Getting a user from the database via id");
-        return userRepositoryI.findById(id).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 
     /**
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserServiceI {
      */
     public User getUser(String name) {
         log.info("(getUser(String name) service method) Getting a user from the database via name");
-        return userRepositoryI.findByName(name).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException());
     }
 
     /**
@@ -104,14 +103,14 @@ public class UserServiceImpl implements UserServiceI {
         }
 
         // Check if a user with the same email exists
-        Optional<User> existingUser = userRepositoryI.findByEmail(user.getEmail());
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if(existingUser.isPresent()){
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
 
         try {
-            return userRepositoryI.save(user);
+            return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Could not save the user to the database", e);
         }
@@ -141,7 +140,7 @@ public class UserServiceImpl implements UserServiceI {
     @Transactional
     public User updateUser(User user) {
 
-        if (!userRepositoryI.existsById(user.getId())) {
+        if (!userRepository.existsById(user.getId())) {
             throw new UserNotFoundException("User with id " + user.getId() + " does not exist.");
         }
 
@@ -149,21 +148,21 @@ public class UserServiceImpl implements UserServiceI {
             throw new InvalidUserInputException("The provided user details are invalid.");
         }
 
-        Optional<User> userWithSameEmail = userRepositoryI.findByEmail(user.getEmail());
+        Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 
         if (userWithSameEmail.isPresent() && userWithSameEmail.get().getId() != user.getId()) {
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
 
         try {
-            return userRepositoryI.save(user);
+            return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Could not update the user in the database", e);
         }
     }
 
     /**
-     * Deletes a user from the database. It uses the UserRepositoryI's deleteById method
+     * Deletes a user from the database. It uses the UserRepository's deleteById method
      * to remove the user with the provided id from the database. If there is no user with the given
      * id in the database, it throws a UserNotFoundException. This exception should be handled where
      * this service method is called, typically in the UserController.
@@ -175,11 +174,11 @@ public class UserServiceImpl implements UserServiceI {
         log.warn("(deleteUser service method) Attempting to delete a user from the database");
 
         // Check if user exists before trying to delete
-        if (!userRepositoryI.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw new UserNotFoundException("User not found with id " + id);
         }
 
-        userRepositoryI.deleteById(id);
+        userRepository.deleteById(id);
         log.warn("(deleteUser service method) User with id " + id + " deleted successfully");
     }
 
@@ -191,7 +190,7 @@ public class UserServiceImpl implements UserServiceI {
     @Override
     public List<User> getAllUsers() {
         log.info("(getAllUsers service method) Getting all users from the database");
-        return userRepositoryI.findAll();
+        return userRepository.findAll();
     }
 
     /**
