@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * This class tests the {@link UserRepository} using an in-memory H2 database.
+ * This class tests the integration between {@link UserRepository} and an in-memory H2 database using JUnit and AssertJ.
  *
  * @DataJpaTest is used to set up an embedded database and configure Spring Data JPA.
  */
@@ -50,7 +50,7 @@ public class UserRepositoryTests {
     }
 
     /**
-     * Test that a User can be retrieved by name.
+     * Integration test that retrieves a User by name.
      * This ensures that the findByName method of the UserRepository is functioning as expected.
      */
     @Test
@@ -62,7 +62,7 @@ public class UserRepositoryTests {
     }
 
     /**
-     * Test that a User can be retrieved by email.
+     * Integration test that retrieves a User by email.
      * This ensures that the findByEmail method of the UserRepository is functioning as expected.
      */
     @Test
@@ -74,7 +74,7 @@ public class UserRepositoryTests {
     }
 
     /**
-     * Test that when a User is saved, it gets correctly persisted in the database.
+     * Integration test that persists a User into the database when saved.
      * This ensures that the save method of the UserRepository is functioning as expected.
      */
     @Test
