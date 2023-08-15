@@ -19,7 +19,6 @@ import lombok.Setter;
  * @NoArgsConstructor: Lombok's annotation to generate a no-args constructor.
  * @Table(name="user_info"): Specifies the name of the database table to be used.
  *
- * TODO: Consider ensuring name and email address uniqueness in the database
  */
 @Entity
 @Getter
