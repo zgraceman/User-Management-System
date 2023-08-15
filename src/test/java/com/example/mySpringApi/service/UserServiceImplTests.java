@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +65,8 @@ class UserServiceImplTests {
         closeable.close();  // This resets the mocks
     }
 
+
+
     /*
     * -----------------------------
     * TESTS FOR getUser(Integer id)
@@ -100,27 +103,45 @@ class UserServiceImplTests {
         assertThrows(UserNotFoundException.class, () -> userService.getUser(1));
     }
 
+
+
     /*
      * ------------------------------
      * TESTS FOR getUser(String name)
      * ------------------------------
      */
 
+    /**
+     * Test for retrieving a user by a valid name.
+     * Expectation: The user should be successfully retrieved if the name exists.
+     */
     @Test
-    @Disabled
     void getUserByName_validName_shouldReturnUser() {
         // Given
+        when(userRepository.findByName("Testo")).thenReturn(Optional.of(testUser));  // Mock
+
         // When
+        User retrievedUser = userService.getUser("Testo");
+
         // Then
+        assertNotNull(retrievedUser);
+        assertEquals(testUser, retrievedUser);
     }
 
+    /**
+     * Test for retrieving a user by a name that doesn't exist in the repository.
+     * Expectation: A UserNotFoundException should be thrown.
+     */
     @Test
-    @Disabled
     void getUserByName_nonExistingName_shouldThrowUserNotFoundException() {
         // Given
-        // When
-        // Then
+        when(userRepository.findByName(any())).thenReturn(Optional.empty());  // Mock
+
+        // When & Then
+        assertThrows(UserNotFoundException.class, () -> userService.getUser("UnknownName"));
     }
+
+
 
     /*
      * -------------------------------
