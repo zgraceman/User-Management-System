@@ -149,28 +149,47 @@ class UserServiceImplTests {
      * -------------------------------
      */
 
+    /**
+     * Test for creating a user with valid input.
+     * Expectation: The user should be successfully created and returned.
+     */
     @Test
-    @Disabled
     void createUser_validUser_shouldReturnCreatedUser() {
         // Given
+        when(userRepository.save(testUser)).thenReturn(testUser);  // Mock
+
         // When
+        User createdUser = userService.createUser(testUser);
+
         // Then
+        assertNotNull(createdUser);
+        assertEquals(testUser, createdUser);
     }
 
+    /**
+     * Test for attempting to create a user with invalid input (null name in this case).
+     * Expectation: An InvalidUserInputException should be thrown.
+     */
     @Test
-    @Disabled
     void createUser_invalidUser_shouldThrowInvalidUserInputException() {
         // Given
-        // When
-        // Then
+        User invalidUser = new User(null, 1000, "invalid@example.com");
+
+        // When & Then
+        assertThrows(InvalidUserInputException.class, () -> userService.createUser(invalidUser));
     }
 
+    /**
+     * Test for attempting to create a user with an email that already exists.
+     * Expectation: A UserAlreadyExistsException should be thrown.
+     */
     @Test
-    @Disabled
     void createUser_existingEmail_shouldThrowUserAlreadyExistsException() {
         // Given
-        // When
-        // Then
+        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));  // Mock
+
+        // When & Then
+        assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(testUser));
     }
 
     /*
