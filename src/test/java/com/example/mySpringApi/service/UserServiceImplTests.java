@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -316,19 +319,44 @@ class UserServiceImplTests {
      * -----------------------
      */
 
+    /**
+     * Test for retrieving all users when there are users present in the database.
+     * Expectation: The returned list should contain all users present in the mock repository,
+     * and the size of the list should correspond to the number of mock users.
+     */
     @Test
-    @Disabled
     void getAllUsers_withExistingUsers_shouldReturnListOfUsers() {
         // Given
+        List<User> users = Arrays.asList(
+                new User("Alice", 1, "alice@example.com"),
+                new User("Bob", 2, "bob@example.com"),
+                new User("Charlie", 3, "charlie@example.com")
+        );
+        when(userRepository.findAll()).thenReturn(users);
+
         // When
+        List<User> retrievedUsers = userService.getAllUsers();
+
         // Then
+        assertNotNull(retrievedUsers);
+        assertEquals(3, retrievedUsers.size());
+        assertTrue(retrievedUsers.containsAll(users));
     }
 
+    /**
+     * Test for retrieving all users when the database is empty.
+     * Expectation: The method should return an empty list, and the list should not be null.
+     */
     @Test
-    @Disabled
     void getAllUsers_noUsersInDatabase_shouldReturnEmptyList() {
         // Given
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
         // When
+        List<User> retrievedUsers = userService.getAllUsers();
+
         // Then
+        assertNotNull(retrievedUsers);
+        assertTrue(retrievedUsers.isEmpty());
     }
 }
