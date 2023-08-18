@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * This class serves as the test suite for methods in UserServiceImpl.
@@ -236,20 +236,36 @@ class UserServiceImplTests {
      * ----------------------------
      */
 
+    /**
+     * Test for deleting a user with a valid ID.
+     * Expectation: The user should be successfully deleted from the repository.
+     */
     @Test
-    @Disabled
     void deleteUser_validId_shouldSuccessfullyDeleteUser() {
         // Given
+        int userId = 1;
+        when(userRepository.existsById(userId)).thenReturn(true);
+        doNothing().when(userRepository).deleteById(userId);
+
         // When
+        userService.deleteUser(userId);
+
         // Then
+        verify(userRepository).deleteById(userId);
     }
 
+    /**
+     * Test for attempting to delete a user by an ID that does not exist in the system.
+     * Expectation: A UserNotFoundException should be thrown.
+     */
     @Test
-    @Disabled
     void deleteUser_nonExistingId_shouldThrowUserNotFoundException() {
         // Given
-        // When
-        // Then
+        int nonExistentUserId = 2;
+        when(userRepository.existsById(nonExistentUserId)).thenReturn(false);
+
+        // When & Then
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(nonExistentUserId));
     }
 
     /*
