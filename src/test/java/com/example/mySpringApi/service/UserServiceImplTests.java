@@ -198,36 +198,78 @@ class UserServiceImplTests {
      * -------------------------------
      */
 
+    /**
+     * Test to verify that a user with valid information is successfully updated.
+     * Expectation: The returned user should be updated with the new information.
+     */
     @Test
-    @Disabled
     void updateUser_validUser_shouldReturnUpdatedUser() {
         // Given
+        User updatedUser = new User("UpdatedTesto", 1001, "updatedtesto@example.com");
+
+        when(userRepository.existsById(updatedUser.getId())).thenReturn(true);  // Mock the existence check.
+        when(userRepository.findById(updatedUser.getId())).thenReturn(Optional.of(testUser));
+        when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+
         // When
+        User result = userService.updateUser(updatedUser);
+
         // Then
+        assertNotNull(result);
+        assertEquals(updatedUser.getName(), result.getName());
+        assertEquals(updatedUser.getEmail(), result.getEmail());
+        verify(userRepository).save(updatedUser);
     }
 
+    /**
+     * Test for attempting to update a user with invalid input (null name in this case).
+     * Expectation: An InvalidUserInputException should be thrown.
+     */
     @Test
-    @Disabled
     void updateUser_invalidUser_shouldThrowInvalidUserInputException() {
         // Given
-        // When
-        // Then
+        User invalidUser = new User(null, 1002, "invalid@example.com");
+
+        when(userRepository.existsById(invalidUser.getId())).thenReturn(true);
+
+        // When & Then
+        assertThrows(InvalidUserInputException.class, () -> userService.updateUser(invalidUser));
     }
 
+    /**
+     * Test for attempting to update a user that does not exist in the system by its ID.
+     * Expectation: A UserNotFoundException should be thrown.
+     */
     @Test
-    @Disabled
     void updateUser_nonExistingId_shouldThrowUserNotFoundException() {
         // Given
-        // When
-        // Then
+        User nonExistentUser = new User("NonExistent", 9999, "nonexistent@example.com");
+
+        when(userRepository.existsById(nonExistentUser.getId())).thenReturn(false);
+
+        // When & Then
+        assertThrows(UserNotFoundException.class, () -> userService.updateUser(nonExistentUser));
     }
 
+    /**
+     * Test for attempting to update a user's email to one that already exists for a different user in the system.
+     * Expectation: A UserAlreadyExistsException should be thrown.
+     */
     @Test
-    @Disabled
     void updateUser_existingEmailForDifferentUser_shouldThrowUserAlreadyExistsException() {
         // Given
-        // When
-        // Then
+        User existingUserWithSameEmail = new User("existingUser", 10, "sameEmail@example.com");
+        existingUserWithSameEmail.setId(1);  // Make sure to set different IDs
+
+        User userToUpdate = new User("userToUpdate", 10, "sameEmail@example.com");
+        userToUpdate.setId(2);  // Different ID than the existing user
+
+        // 2. Mock the interactions with the UserRepository
+        when(userRepository.existsById(userToUpdate.getId())).thenReturn(true);
+        when(userRepository.findByEmail(userToUpdate.getEmail())).thenReturn(Optional.of(existingUserWithSameEmail));
+
+        // 3. When & Then
+        assertThrows(UserAlreadyExistsException.class, () -> userService.updateUser(userToUpdate));
     }
 
     /*
