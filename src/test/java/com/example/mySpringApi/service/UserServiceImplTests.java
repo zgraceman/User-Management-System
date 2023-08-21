@@ -83,7 +83,7 @@ class UserServiceImplTests {
     @Test
     void getUserById_validId_shouldReturnUser() {
         // Given
-        when(userRepository.findById(1)).thenReturn(Optional.of(testUser));  // Mock
+        mockUserInRepository(testUser, 1);
 
         // When
         User retrievedUser = userService.getUser(1);
@@ -121,7 +121,7 @@ class UserServiceImplTests {
     @Test
     void getUserByName_validName_shouldReturnUser() {
         // Given
-        when(userRepository.findByName("Testo")).thenReturn(Optional.of(testUser));  // Mock
+        mockUserInRepository(testUser, 1);
 
         // When
         User retrievedUser = userService.getUser("Testo");
@@ -189,7 +189,7 @@ class UserServiceImplTests {
     @Test
     void createUser_existingEmail_shouldThrowUserAlreadyExistsException() {
         // Given
-        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));  // Mock
+        mockUserInRepository(testUser, testUser.getId());  // Mock
 
         // When & Then
         assertThrows(UserAlreadyExistsException.class, () -> userService.createUser(testUser));
@@ -210,8 +210,7 @@ class UserServiceImplTests {
         // Given
         User updatedUser = new User("UpdatedTesto", 1001, "updatedtesto@example.com");
 
-        when(userRepository.existsById(updatedUser.getId())).thenReturn(true);  // Mock the existence check.
-        when(userRepository.findById(updatedUser.getId())).thenReturn(Optional.of(testUser));
+        mockUserInRepository(testUser, updatedUser.getId());
         when(userRepository.save(updatedUser)).thenReturn(updatedUser);
 
         // When
@@ -233,7 +232,7 @@ class UserServiceImplTests {
         // Given
         User invalidUser = new User(null, 1002, "invalid@example.com");
 
-        when(userRepository.existsById(invalidUser.getId())).thenReturn(true);
+        mockUserInRepository(invalidUser, invalidUser.getId());
 
         // When & Then
         assertThrows(InvalidUserInputException.class, () -> userService.updateUser(invalidUser));
@@ -269,7 +268,7 @@ class UserServiceImplTests {
 
         // 2. Mock the interactions with the UserRepository
         when(userRepository.existsById(userToUpdate.getId())).thenReturn(true);
-        when(userRepository.findByEmail(userToUpdate.getEmail())).thenReturn(Optional.of(existingUserWithSameEmail));
+        mockUserInRepository(existingUserWithSameEmail, existingUserWithSameEmail.getId());
 
         // 3. When & Then
         assertThrows(UserAlreadyExistsException.class, () -> userService.updateUser(userToUpdate));
@@ -289,7 +288,7 @@ class UserServiceImplTests {
     void deleteUser_validId_shouldSuccessfullyDeleteUser() {
         // Given
         int userId = 1;
-        when(userRepository.existsById(userId)).thenReturn(true);
+        mockUserInRepository(testUser, userId);
         doNothing().when(userRepository).deleteById(userId);
 
         // When
@@ -358,5 +357,36 @@ class UserServiceImplTests {
         // Then
         assertNotNull(retrievedUsers);
         assertTrue(retrievedUsers.isEmpty());
+    }
+
+
+    // Helper Methods
+
+    /**
+     * Helper method to mock the behavior of the UserRepository for a given user.
+     *
+     * This method simulates the presence of a specific user in the repository by making the repository return
+     * this user for various queries (by ID, by name, by email) and indicating that this user exists.
+     *
+     * Primarily used within the test class to streamline the setup of the mock UserRepository and reduce redundancy
+     * in the test preparations.
+     *
+     * @param user The user instance that the mocked repository should return for queries.
+     * @param userId The user ID associated with the given user, used to mock the findByID() method.
+     */
+    private void mockUserInRepository(User user, int userId) {
+        // Mock the behavior for the findById() method. When the method is called with the provided userId,
+        // it will return the given user wrapped in an Optional.
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Mock the behavior for the findByName() method.
+        when(userRepository.findByName(user.getName())).thenReturn(Optional.of(user));
+
+        // Mock the behavior for the findByEmail() method.
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        // Mock the behavior for the existsById() method. When the method is called with the provided userId,
+        // it will return true, indicating that a user with the given ID exists in the mock repository.
+        when(userRepository.existsById(userId)).thenReturn(true);
     }
 }
