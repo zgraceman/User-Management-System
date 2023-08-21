@@ -100,7 +100,7 @@ class UserServiceImplTests {
     @Test
     void getUserById_nonExistingId_shouldThrowUserNotFoundException() {
         // Given
-        when(userRepository.findById(anyInt())).thenReturn(Optional.empty());  // Mock
+        mockNonExistentUserInRepository(1);  // Mock
 
         // When & Then
         assertThrows(UserNotFoundException.class, () -> userService.getUser(1));
@@ -138,7 +138,7 @@ class UserServiceImplTests {
     @Test
     void getUserByName_nonExistingName_shouldThrowUserNotFoundException() {
         // Given
-        when(userRepository.findByName(any())).thenReturn(Optional.empty());  // Mock
+        mockNonExistentUserInRepository(1);  // Mock
 
         // When & Then
         assertThrows(UserNotFoundException.class, () -> userService.getUser("UnknownName"));
@@ -159,7 +159,7 @@ class UserServiceImplTests {
     @Test
     void createUser_validUser_shouldReturnCreatedUser() {
         // Given
-        when(userRepository.save(testUser)).thenReturn(testUser);  // Mock
+        mockSaveUser(testUser, testUser);  // Mock
 
         // When
         User createdUser = userService.createUser(testUser);
@@ -211,7 +211,7 @@ class UserServiceImplTests {
         User updatedUser = new User("UpdatedTesto", 1001, "updatedtesto@example.com");
 
         mockUserInRepository(testUser, updatedUser.getId());
-        when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+        mockSaveUser(updatedUser, updatedUser);
 
         // When
         User result = userService.updateUser(updatedUser);
@@ -247,7 +247,7 @@ class UserServiceImplTests {
         // Given
         User nonExistentUser = new User("NonExistent", 9999, "nonexistent@example.com");
 
-        when(userRepository.existsById(nonExistentUser.getId())).thenReturn(false);
+        mockNonExistentUserInRepository(nonExistentUser.getId());
 
         // When & Then
         assertThrows(UserNotFoundException.class, () -> userService.updateUser(nonExistentUser));
@@ -266,11 +266,11 @@ class UserServiceImplTests {
         User userToUpdate = new User("userToUpdate", 10, "sameEmail@example.com");
         userToUpdate.setId(2);  // Different ID than the existing user
 
-        // 2. Mock the interactions with the UserRepository
-        when(userRepository.existsById(userToUpdate.getId())).thenReturn(true);
+        // Mock the interactions with the UserRepository
+        mockUserInRepository(userToUpdate, userToUpdate.getId());
         mockUserInRepository(existingUserWithSameEmail, existingUserWithSameEmail.getId());
 
-        // 3. When & Then
+        // When & Then
         assertThrows(UserAlreadyExistsException.class, () -> userService.updateUser(userToUpdate));
     }
 
@@ -306,7 +306,7 @@ class UserServiceImplTests {
     void deleteUser_nonExistingId_shouldThrowUserNotFoundException() {
         // Given
         int nonExistentUserId = 2;
-        when(userRepository.existsById(nonExistentUserId)).thenReturn(false);
+        mockNonExistentUserInRepository(nonExistentUserId);
 
         // When & Then
         assertThrows(UserNotFoundException.class, () -> userService.deleteUser(nonExistentUserId));
@@ -388,5 +388,25 @@ class UserServiceImplTests {
         // Mock the behavior for the existsById() method. When the method is called with the provided userId,
         // it will return true, indicating that a user with the given ID exists in the mock repository.
         when(userRepository.existsById(userId)).thenReturn(true);
+    }
+
+    /**
+     * Mocks the save method of the UserRepository to simulate saving a user.
+     *
+     * @param inputUser The user that is expected to be passed to the save method.
+     * @param returnedUser The user that should be returned when save is called.
+     */
+    private void mockSaveUser(User inputUser, User returnedUser) {
+        when(userRepository.save(inputUser)).thenReturn(returnedUser);
+    }
+
+    /**
+     * Helper method to mock the behavior of the UserRepository for a non-existing user.
+     *
+     * @param userId The user ID that does not exist in the repository.
+     */
+    private void mockNonExistentUserInRepository(int userId) {
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userRepository.existsById(userId)).thenReturn(false);
     }
 }
