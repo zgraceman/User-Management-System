@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) { // consider testing
             throw new RuntimeException("Could not save the user to the database", e);
         }
     }
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             return userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) { // consider testing
             throw new RuntimeException("Could not update the user in the database", e);
         }
     }
@@ -193,6 +193,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+
+    // Helper Methods
+
     /**
      * Private helper method to validate a User object.
      * This method checks whether the provided User object is valid based on the business rules.
@@ -202,7 +205,7 @@ public class UserServiceImpl implements UserService {
      * @param user The User object to be validated.
      * @return boolean indicating whether the User object is valid (true) or not (false).
      */
-    private boolean isValidUser(User user) {
+    public boolean isValidUser(User user) {
         if (user.getName() == null || user.getEmail() == null) {
             return false;
         }

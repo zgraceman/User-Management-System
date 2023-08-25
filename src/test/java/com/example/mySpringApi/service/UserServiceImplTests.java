@@ -359,6 +359,114 @@ class UserServiceImplTests {
         assertTrue(retrievedUsers.isEmpty());
     }
 
+    /*
+     * -------------------------------
+     * TESTS FOR isValidUser(User user)
+     * -------------------------------
+     */
+
+    /**
+     * Test to verify that a user with valid information is correctly determined to be valid.
+     * Expectation: The method should return true.
+     */
+    @Test
+    void isValidUser_validUser_shouldReturnTrue() {
+        // Given
+        User validUser = new User("John Doe", 1234, "johndoe@example.com");
+
+        // When
+        boolean isValid = userService.isValidUser(validUser);
+
+        // Then
+        assertTrue(isValid);
+    }
+
+    /**
+     * Test for determining the validity of a user with a null name.
+     * Expectation: The method should return false.
+     */
+    @Test
+    void isValidUser_nullName_shouldReturnFalse() {
+        // Given
+        User userWithNullName = new User(null, 1235, "invalid@example.com");
+
+        // When
+        boolean isValid = userService.isValidUser(userWithNullName);
+
+        // Then
+        assertFalse(isValid);
+    }
+
+    /**
+     * Test for determining the validity of a user with an empty name.
+     * Expectation: The method should return false.
+     */
+    @Test
+    void isValidUser_emptyName_shouldReturnFalse() {
+        // Given
+        User userWithEmptyName = new User("", 1236, "emptyname@example.com");
+
+        // When
+        boolean isValid = userService.isValidUser(userWithEmptyName);
+
+        // Then
+        assertFalse(isValid);
+    }
+
+    /**
+     * Test for determining the validity of a user with an invalid email format.
+     * Expectation: The method should return false.
+     */
+    @Test
+    void isValidUser_invalidEmailFormat_shouldReturnFalse() {
+        // Given
+        User userWithInvalidEmail = new User("Invalid Email User", 1237, "invalidemail");
+
+        // When
+        boolean isValid = userService.isValidUser(userWithInvalidEmail);
+
+        // Then
+        assertFalse(isValid);
+    }
+
+    /**
+     * Test if the User's name is too short.
+     *
+     * Given a User object with a name of 2 characters,
+     * when checking its validity using the isValidUser method,
+     * then the method should return false.
+     */
+    @Test
+    void whenNameIsTooShort_thenIsValidUserShouldReturnFalse() {
+        // Given
+        User userWithShortName = new User("Jo", 101, "jo@example.com");
+
+        // When
+        boolean isValid = userService.isValidUser(userWithShortName);
+
+        // Then
+        assertFalse(isValid);
+    }
+
+    /**
+     * Test if the User's name is too long.
+     *
+     * Given a User object with a name exceeding 50 characters,
+     * when checking its validity using the isValidUser method,
+     * then the method should return false.
+     */
+    @Test
+    void whenNameIsTooLong_thenIsValidUserShouldReturnFalse() {
+        // Given
+        User userWithLongName = new User("J".repeat(51), 101, "longname@example.com");
+
+        // When
+        boolean isValid = userService.isValidUser(userWithLongName);
+
+        // Then
+        assertFalse(isValid);
+    }
+
 
     // Helper Methods
 
