@@ -51,9 +51,6 @@ public class UserController {
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
         User user = userService.getUser(id);
-        if (user == null) {
-            return ResponseHandler.generateResponse("User not found", HttpStatus.NOT_FOUND, null);
-        }
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 

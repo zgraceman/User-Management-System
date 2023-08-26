@@ -1,5 +1,6 @@
 package com.example.mySpringApi.api.controller;
 
+import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
 
@@ -81,7 +82,7 @@ class UserControllerTests {
     public void getUserById_nonExistingId_shouldReturnNotFound() throws Exception {
         // Given
         int nonExistingUserId = 999999; // some ID that doesn't exist
-        given(userService.getUser(nonExistingUserId)).willReturn(null);
+        given(userService.getUser(nonExistingUserId)).willThrow(new UserNotFoundException());
 
         // When & Then
         mockMvc.perform(get("/userAPI/id/" + nonExistingUserId))
