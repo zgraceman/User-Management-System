@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * This enhances the consistency of all API responses, not just for the successful ones but also for the error scenarios.
  *
  * Specific types of exceptions can be handled by adding more methods annotated with @ExceptionHandler.
- *
- * TODO: Create specific handler methods for other exceptions like UserAlreadyExistsException,
- * TODO: InvalidUserInputException, etc. with appropriate HTTP status codes.
  */
 @ControllerAdvice
 @Slf4j

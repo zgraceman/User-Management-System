@@ -146,8 +146,6 @@ public class UserController {
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable int id) {
         log.warn("I am in the deleteUser /deleteUser/{id} controller method");
-        // TODO: Return an appropriate HTTP error status (like 404 NOT FOUND)
-        // TODO: if the UserService's deleteUser method throws an EmptyResultDataAccessException.
         userService.deleteUser(id);
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }

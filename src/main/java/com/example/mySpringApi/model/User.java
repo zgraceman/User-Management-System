@@ -13,11 +13,11 @@ import lombok.Setter;
  * This entity is mapped to the "user_info" table in the database.
  *
  * Annotations:
- * @Entity: Specifies that this class is a JPA entity.
- * @Getter: Lombok's annotation to generate getters for all fields.
- * @Setter: Lombok's annotation to generate setters for all fields.
- * @NoArgsConstructor: Lombok's annotation to generate a no-args constructor.
- * @Table(name="user_info"): Specifies the name of the database table to be used.
+ * This class is specified as a JPA entity using the @Entity annotation.
+ * Lombok's @Getter annotation used to generate getters for all fields.
+ * Lombok's @Setter annotation used to generate setters for all fields.
+ * Lombok's @NoArgsConstructor annotation used to generate a no-args constructor.
+ * This class specifies the name of the database table to be used with @Table(name="user_info").
  *
  */
 @Entity

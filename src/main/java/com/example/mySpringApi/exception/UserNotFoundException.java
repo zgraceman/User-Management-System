@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 
 /**
  * This exception is thrown when a requested user cannot be found.
- * It is a specific type of {@link UserException}, with a preset message and HTTP status code.
+ * It is a specific type of UserException, with a preset message and HTTP status code.
  *
  * This class is part of the exception handling framework for the application,
  * and is used to signal that a requested user-related resource does not exist.
  *
- * It extends {@link UserException} to leverage the application's global exception handling
+ * It extends UserException to leverage the application's global exception handling
  * and response formatting.
  */
 public class UserNotFoundException extends UserException {

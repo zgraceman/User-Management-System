@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
      * Fetches a User by their ID from the UserRepository.
      *
      * This method interacts with the UserRepository to fetch a User based on the provided ID. The `findById` method
-     * of the UserRepository returns an Optional<User>. In this case, we are using the `orElseThrow()` method to retrieve
+     * of the UserRepository returns an {@code Optional<User>}. In this case, we are using the `orElseThrow()` method to retrieve
      * the User object if it exists, or throw a UserNotFoundException if the User does not exist.
      *
      * @param id The ID of the User to be fetched.
