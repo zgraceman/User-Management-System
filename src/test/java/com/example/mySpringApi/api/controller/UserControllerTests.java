@@ -95,14 +95,38 @@ class UserControllerTests {
      * ------------------------------
      */
 
+    /**
+     * Test to verify behavior when an existing user name is provided.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
-    public void getUserByName_existingName_shouldReturnUser() {
-        // ...
+    public void getUserByName_existingName_shouldReturnUser() throws Exception {
+        // Given the mock behavior of UserService.
+        given(userService.getUser("John")).willReturn(mockUser);
+
+        // When & Then
+        mockMvc.perform(get("/userAPI/name/John"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.name").value("John"))
+                .andExpect(jsonPath("$.data.email").value("john@example.com"));
     }
 
+    /**
+     * Test to verify behavior when a non-existing user name is provided.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
-    public void getUserByName_nonExistingName_shouldReturnNotFound() {
-        // ...
+    public void getUserByName_nonExistingName_shouldReturnNotFound() throws Exception {
+        // Given
+        String nonExistingUserName = "UnknownName";
+        given(userService.getUser(nonExistingUserName)).willThrow(new UserNotFoundException());
+
+        // When & Then
+        mockMvc.perform(get("/userAPI/name/" + nonExistingUserName))
+                .andExpect(status().isNotFound());
     }
 
     /*
