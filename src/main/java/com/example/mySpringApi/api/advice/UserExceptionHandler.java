@@ -5,9 +5,15 @@ import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles exceptions for the user-related controllers.
@@ -77,6 +83,34 @@ public class UserExceptionHandler {
                 ex.getMessage(),
                 ex.getHttpStatus(),
                 null // pass null or any other relevant data in case of an exception
+        );
+    }
+
+    /**
+     * Handles validation exceptions triggered by {@code @Valid} annotations on DTO fields.
+     *
+     * This method captures errors from Spring's built-in validation, transforming them
+     * into a standardized API error response using the ResponseHandler.
+     *
+     * @param ex The MethodArgumentNotValidException that was thrown.
+     * @return A ResponseEntity containing the standard API error response and HTTP status.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+
+        log.error("Validation error. Stack Trace -->", ex);
+
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return ResponseHandler.generateResponse(
+                "Validation failed for the request.",
+                HttpStatus.BAD_REQUEST,
+                errors // this will send back the fields and their respective validation error messages
         );
     }
 }
