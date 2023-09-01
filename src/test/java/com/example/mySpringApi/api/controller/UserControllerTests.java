@@ -13,6 +13,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -135,14 +140,52 @@ class UserControllerTests {
      * -----------------------
      */
 
+    /**
+     * Test to verify behavior when there are users in the database.
+     *
+     * This test ensures that the correct HTTP status and user list are returned
+     * when there are users present in the database.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
-    public void getAllUsers_usersInDatabase_shouldReturnUserList() {
-        // ...
+    public void getAllUsers_usersInDatabase_shouldReturnUserList() throws Exception {
+        // Given a list of users.
+        List<User> users = Arrays.asList(
+                new User("John", 40, "john@example.com"),
+                new User("Jane", 35, "jane@example.com")
+        );
+        given(userService.getAllUsers()).willReturn(users);
+
+        // When & Then
+        mockMvc.perform(get("/userAPI"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("All users fetched"))
+                .andExpect(jsonPath("$.data", hasSize(2)))
+                .andExpect(jsonPath("$.data[0].name").value("John"))
+                .andExpect(jsonPath("$.data[0].email").value("john@example.com"))
+                .andExpect(jsonPath("$.data[1].name").value("Jane"))
+                .andExpect(jsonPath("$.data[1].email").value("jane@example.com"));
     }
 
+    /**
+     * Test to verify behavior when the database has no users.
+     *
+     * This test ensures that the correct HTTP status and an empty list or
+     * appropriate message are returned when there are no users in the database.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
-    public void getAllUsers_noUsersInDatabase_shouldReturnEmptyList() {
-        // ...
+    public void getAllUsers_noUsersInDatabase_shouldReturnEmptyList() throws Exception {
+        // Given an empty list.
+        given(userService.getAllUsers()).willReturn(new ArrayList<>());
+
+        // When & Then
+        mockMvc.perform(get("/userAPI"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("All users fetched"))
+                .andExpect(jsonPath("$.data", hasSize(0)));
     }
 
     /*
