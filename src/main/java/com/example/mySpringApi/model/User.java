@@ -3,7 +3,10 @@ package com.example.mySpringApi.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
+
+import javax.validation.constraints.*;
 
 /**
  * The User is a JPA entity that represents a user in the application.
@@ -31,11 +34,17 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message = "Name cannot be null.")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters.")
     private String name;
 
+    @NotNull(message = "Email cannot be null.")
+    @Email(message = "Invalid email format.")
     @Column(unique = true)
     private String email;
 
+    @Min(value = 0, message = "Age must be positive.")
+    @Max(value = 150, message = "Age value is unrealistic.")
     private int age;
 
     /**
