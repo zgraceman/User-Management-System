@@ -3,6 +3,7 @@ package com.example.mySpringApi.api.controller;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,7 +96,7 @@ public class UserController {
      * @return a ResponseEntity that includes the User object saved in the database, a message, and an HTTP status code.
      */
     @PostMapping("/createUser")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
         log.warn("I am in the createUser controller method");
         User createdUser = userService.createUser(user);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
@@ -119,7 +120,7 @@ public class UserController {
      * @return a ResponseEntity that includes the updated User object, a message, and an HTTP status code.
      */
     @PutMapping("/updateUser")
-    public ResponseEntity<Object> updateUser(@RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
         log.warn("I am in the updateUser controller method");
         User updatedUser = userService.updateUser(user);
         return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, updatedUser);
