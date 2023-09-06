@@ -1,12 +1,17 @@
 package com.example.mySpringApi.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
 
 /**
  * The User is a JPA entity that represents a user in the application.
@@ -46,6 +51,8 @@ public class User {
     @Min(value = 0, message = "Age must be positive.")
     @Max(value = 150, message = "Age value is unrealistic.")
     private int age;
+
+    // Constructor
 
     /**
      * Constructs a new User with the given parameters.

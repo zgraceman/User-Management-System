@@ -5,6 +5,9 @@ import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepository;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,6 +31,9 @@ import java.util.regex.Pattern;
  * TODO: Validate that the user making the request has the necessary permissions.
  */
 @Service
+@Getter
+@Setter
+@NoArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
 
@@ -219,7 +225,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Check for name length
-        if (trimmedName.length() < 3 || trimmedName.length() > 50) {
+        if (trimmedName.length() < 2 || trimmedName.length() > 50) {
             return false;
         }
 
