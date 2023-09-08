@@ -432,14 +432,14 @@ class UserServiceImplTests {
     /**
      * Test if the User's name is too short.
      *
-     * Given a User object with a name of 2 characters,
+     * Given a User object with a name of 1 characters,
      * when checking its validity using the isValidUser method,
      * then the method should return false.
      */
     @Test
     void whenNameIsTooShort_thenIsValidUserShouldReturnFalse() {
         // Given
-        User userWithShortName = new User("Jo", 101, "jo@example.com");
+        User userWithShortName = new User("J", 101, "j@example.com");
 
         // When
         boolean isValid = userService.isValidUser(userWithShortName);
