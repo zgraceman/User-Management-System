@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -247,13 +248,44 @@ class UserControllerTests {
      */
 
     @Test
-    public void updateUser_existingUser_shouldReturnUpdatedUser() {
-        // ...
+    public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
+        // Given an existing user and updated details
+        User updatedUser = new User("John Updated", 45, "john_updated@example.com");
+        updatedUser.setId(1);
+
+        given(userService.updateUser(any(User.class))).willReturn(updatedUser);
+
+        // Convert the updatedUser object to a JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+
+        // When & Then
+        mockMvc.perform(put("/userAPI/updateUser")
+                        .contentType("application/json")
+                        .content(updatedUserJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name").value("John Updated"))
+                .andExpect(jsonPath("$.data.age").value(45))
+                .andExpect(jsonPath("$.data.email").value("john_updated@example.com"));
     }
 
     @Test
-    public void updateUser_nonExistingUser_shouldReturnNotFound() {
-        // ...
+    public void updateUser_nonExistingUser_shouldReturnNotFound() throws Exception {
+        // Given a non-existing user ID
+        User nonExistingUser = new User("Non Existent", 50, "non_existent@example.com");
+        nonExistingUser.setId(999999); // some ID that doesn't exist
+
+        given(userService.updateUser(any(User.class))).willThrow(new UserNotFoundException());
+
+        // Convert the nonExistingUser object to a JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String nonExistingUserJson = objectMapper.writeValueAsString(nonExistingUser);
+
+        // When & Then
+        mockMvc.perform(put("/userAPI/updateUser")
+                        .contentType("application/json")
+                        .content(nonExistingUserJson))
+                .andExpect(status().isNotFound());
     }
 
 
