@@ -23,6 +23,7 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -296,12 +297,30 @@ class UserControllerTests {
      */
 
     @Test
-    public void deleteUser_existingId_shouldReturnDeletedSuccessfully() {
-        // ...
+    public void deleteUser_existingId_shouldReturnDeletedSuccessfully() throws Exception {
+        // Given an existing user ID
+        int existingUserId = 1;
+
+        // Mocking the userService to not throw any exception when called with existingUserId
+        willDoNothing().given(userService).deleteUser(existingUserId);
+
+        // When & Then
+        mockMvc.perform(delete("/userAPI/deleteUser/" + existingUserId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User deleted successfully"));
     }
 
     @Test
-    public void deleteUser_nonExistingId_shouldReturnNotFound() {
-        // ...
+    public void deleteUser_nonExistingId_shouldReturnNotFound() throws Exception {
+        // Given a non-existing user ID
+        int nonExistingUserId = 999999; // some ID that doesn't exist
+
+        // Mocking the userService to throw UserNotFoundException when called with nonExistingUserId
+        willThrow(new UserNotFoundException()).given(userService).deleteUser(nonExistingUserId);
+
+        // When & Then
+        mockMvc.perform(delete("/userAPI/deleteUser/" + nonExistingUserId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("User not found"));
     }
 }
