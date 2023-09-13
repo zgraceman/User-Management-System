@@ -198,6 +198,13 @@ class UserControllerTests {
      * -------------------------------
      */
 
+    /**
+     * Test to verify the creation of a user with valid details.
+     *
+     * This test ensures that when a valid user is created through the createUser endpoint, the correct HTTP status is returned along with the details of the created user in the response.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void createUser_validUser_shouldReturnCreatedUser() throws Exception {
         // Given a valid user
@@ -219,6 +226,13 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.email").value("john@example.com"));
     }
 
+    /**
+     * Test to verify the validation error during the creation of a user with invalid details.
+     *
+     * This test ensures that when an invalid user is created through the createUser endpoint, the correct HTTP status and validation error messages are returned to indicate the validation failure.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void createUser_invalidUser_shouldReturnValidationError() throws Exception { // if you have validations
         // Prepare a user object with invalid data
@@ -248,6 +262,13 @@ class UserControllerTests {
      * -------------------------------
      */
 
+    /**
+     * Test to verify updating an existing user.
+     *
+     * This test ensures that when an existing user's details are updated via the updateUser endpoint, the correct HTTP status is returned along with the updated user information in the response.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
         // Given an existing user and updated details
@@ -270,6 +291,13 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.email").value("john_updated@example.com"));
     }
 
+    /**
+     * Test to verify the case of updating a non-existing user.
+     *
+     * This test ensures that an attempt to update a non-existing user through the updateUser endpoint returns the correct HTTP status and an appropriate error message.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void updateUser_nonExistingUser_shouldReturnNotFound() throws Exception {
         // Given a non-existing user ID
@@ -296,6 +324,13 @@ class UserControllerTests {
      * ----------------------------
      */
 
+    /**
+     * Test to verify deleting a user with an existing ID.
+     *
+     * This test ensures that deleting a user with an existing ID through the deleteUser endpoint returns the correct HTTP status along with a success message indicating the user was deleted.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void deleteUser_existingId_shouldReturnDeletedSuccessfully() throws Exception {
         // Given an existing user ID
@@ -310,6 +345,13 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.message").value("User deleted successfully"));
     }
 
+    /**
+     * Test to verify the case of deleting a non-existing user.
+     *
+     * This test ensures that an attempt to delete a non-existing user ID through the deleteUser endpoint returns the correct HTTP status and an appropriate error message.
+     *
+     * @throws Exception if any MVC or JSON parsing exception occurs.
+     */
     @Test
     public void deleteUser_nonExistingId_shouldReturnNotFound() throws Exception {
         // Given a non-existing user ID
