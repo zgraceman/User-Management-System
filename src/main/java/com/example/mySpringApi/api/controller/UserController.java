@@ -3,6 +3,9 @@ package com.example.mySpringApi.api.controller;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/userAPI")
 @Slf4j
+@Tag(name = "User Operations", description = "CRUD operations related to User")
 public class UserController {
 
     private UserService userService;
@@ -49,6 +53,9 @@ public class UserController {
      * @param id the ID of the User to retrieve
      * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
+    @Operation(summary = "Get a User by their ID")
+    @ApiResponse(responseCode = "200", description = "User found")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
         User user = userService.getUser(id);
@@ -60,6 +67,9 @@ public class UserController {
      * @param name the name of the User to retrieve
      * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
+    @Operation(summary = "Get a User by their name")
+    @ApiResponse(responseCode = "200", description = "User found")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/name/{name}")
     public ResponseEntity<Object> getUser(@PathVariable String name) {
         log.info("I am in the getUser /name/{name} controller method");
@@ -75,6 +85,9 @@ public class UserController {
      *
      * @return a ResponseEntity that includes the list of all User objects or an appropriate error response.
      */
+    @Operation(summary = "Fetches all Users")
+    @ApiResponse(responseCode = "200", description = "Successfully fetched all users")
+    @ApiResponse(responseCode = "204", description = "No users exist")
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
