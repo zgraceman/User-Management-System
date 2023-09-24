@@ -108,6 +108,9 @@ public class UserController {
      * @param user A User object contained in the request body.
      * @return a ResponseEntity that includes the User object saved in the database, a message, and an HTTP status code.
      */
+    @Operation(summary = "Create a new user")
+    @ApiResponse(responseCode = "201", description = "User successfully created")
+    @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
         log.warn("I am in the createUser controller method");
@@ -132,6 +135,10 @@ public class UserController {
      *             the ID of the user to be updated.
      * @return a ResponseEntity that includes the updated User object, a message, and an HTTP status code.
      */
+    @Operation(summary = "Update an existing user by ID")
+    @ApiResponse(responseCode = "200", description = "User updated successfully")
+    @ApiResponse(responseCode = "400", description = "Bad request - validation error")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @PutMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
         log.warn("I am in the updateUser controller method");
@@ -157,6 +164,9 @@ public class UserController {
      * @param id The id of the user to delete, included in the path of the request.
      * @return A ResponseEntity with a message, HTTP status code, and no data.
      */
+    @Operation(summary = "Delete a user by ID")
+    @ApiResponse(responseCode = "200", description = "User deleted successfully")
+    @ApiResponse(responseCode = "404", description = "User not found")
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable int id) {
         log.warn("I am in the deleteUser /deleteUser/{id} controller method");
