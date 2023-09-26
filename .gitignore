@@ -34,7 +34,3 @@ Thumbs.db
 # Documentation generated
 /target/site/
 /target/javadoc-bundle-options/
-
-# Maven wrapper files
-mvnw
-mvnw.cmd
