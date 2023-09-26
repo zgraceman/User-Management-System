@@ -68,19 +68,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Retrieves a User by name from the UserRepository. Returns the found User,
-     * or throws a UserNotFoundException if no User with the provided name is found.
+     * Retrieves a User by email from the UserRepository. Returns the found User,
+     * or throws a UserNotFoundException if no User with the provided email is found.
      *
-     * @param name the name of the User to retrieve
-     * @return The User object associated with the provided name.
-     * @throws UserNotFoundException If the User with the provided name does not exist.
+     * @param email the email of the User to retrieve
+     * @return The User object associated with the provided email.
+     * @throws UserNotFoundException If the User with the provided email does not exist.
      *
-     * TODO: Add handling for partial matches in user name search.
-     * TODO: Consider whether multiple users could have the same name and how to handle such situations.
+     * TODO: Add handling for partial matches in user email search.
      */
-    public User getUser(String name) {
+    public User getUser(String email) {
         log.info("(getUser(String name) service method) Getting a user from the database via name");
-        return userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
     }
 
     /**

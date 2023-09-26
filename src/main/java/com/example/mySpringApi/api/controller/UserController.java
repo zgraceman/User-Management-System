@@ -66,18 +66,18 @@ public class UserController {
 
     /**
      * Retrieves a User by name.
-     * @param name the name of the User to retrieve
+     * @param email the name of the User to retrieve
      * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
     @Operation(
-            summary = "Get a User by their name",
-            description = "Fetches user details by Name from the database. Returns a single user object.")
+            summary = "Get a User by their email",
+            description = "Fetches user details by Email from the database. Returns a single user object.")
     @ApiResponse(responseCode = "200", description = "User found")
     @ApiResponse(responseCode = "404", description = "User not found")
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Object> getUser(@PathVariable String name) {
-        log.info("I am in the getUser /name/{name} controller method");
-        User user = userService.getUser(name);
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Object> getUser(@PathVariable String email) {
+        log.info("I am in the getUser /email/{email} controller method");
+        User user = userService.getUser(email);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
     }
 
