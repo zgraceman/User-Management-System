@@ -53,7 +53,9 @@ public class UserController {
      * @param id the ID of the User to retrieve
      * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
-    @Operation(summary = "Get a User by their ID")
+    @Operation(
+            summary = "Get a User by their ID",
+            description = "Fetches user details by ID from the database. Returns a single user object.")
     @ApiResponse(responseCode = "200", description = "User found")
     @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/id/{id}")
@@ -67,7 +69,9 @@ public class UserController {
      * @param name the name of the User to retrieve
      * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
      */
-    @Operation(summary = "Get a User by their name")
+    @Operation(
+            summary = "Get a User by their name",
+            description = "Fetches user details by Name from the database. Returns a single user object.")
     @ApiResponse(responseCode = "200", description = "User found")
     @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/name/{name}")
@@ -85,7 +89,9 @@ public class UserController {
      *
      * @return a ResponseEntity that includes the list of all User objects or an appropriate error response.
      */
-    @Operation(summary = "Fetches all Users")
+    @Operation(
+            summary = "Fetches all Users",
+            description = "Fetches all user details from the database. Returns a list of user objects.")
     @ApiResponse(responseCode = "200", description = "Successfully fetched all users")
     @ApiResponse(responseCode = "204", description = "No users exist")
     @GetMapping
@@ -108,7 +114,9 @@ public class UserController {
      * @param user A User object contained in the request body.
      * @return a ResponseEntity that includes the User object saved in the database, a message, and an HTTP status code.
      */
-    @Operation(summary = "Create a new user")
+    @Operation(
+            summary = "Create a new user",
+            description = "Creates a new user in the database and returns the created user object.")
     @ApiResponse(responseCode = "201", description = "User successfully created")
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @PostMapping("/createUser")
@@ -135,7 +143,9 @@ public class UserController {
      *             the ID of the user to be updated.
      * @return a ResponseEntity that includes the updated User object, a message, and an HTTP status code.
      */
-    @Operation(summary = "Update an existing user by ID")
+    @Operation(
+            summary = "Update an existing user by ID",
+            description = "Updates an existing user in the database by ID and returns the updated user object.")
     @ApiResponse(responseCode = "200", description = "User updated successfully")
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @ApiResponse(responseCode = "404", description = "User not found")
@@ -164,7 +174,9 @@ public class UserController {
      * @param id The id of the user to delete, included in the path of the request.
      * @return A ResponseEntity with a message, HTTP status code, and no data.
      */
-    @Operation(summary = "Delete a user by ID")
+    @Operation(
+            summary = "Delete a user by ID",
+            description = "Deletes a user by ID from the database and returns a confirmation message.")
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @ApiResponse(responseCode = "404", description = "User not found")
     @DeleteMapping("/deleteUser/{id}")
