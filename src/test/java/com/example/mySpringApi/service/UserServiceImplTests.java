@@ -119,12 +119,12 @@ class UserServiceImplTests {
      * Expectation: The user should be successfully retrieved if the name exists.
      */
     @Test
-    void getUserByName_validName_shouldReturnUser() {
+    void getUserByEmail_validEmail_shouldReturnUser() {
         // Given
         mockUserInRepository(testUser, 1);
 
         // When
-        User retrievedUser = userService.getUser("Testo");
+        User retrievedUser = userService.getUser("testo@example.com");
 
         // Then
         assertNotNull(retrievedUser);
@@ -136,12 +136,12 @@ class UserServiceImplTests {
      * Expectation: A UserNotFoundException should be thrown.
      */
     @Test
-    void getUserByName_nonExistingName_shouldThrowUserNotFoundException() {
+    void getUserByEmail_nonExistingEmail_shouldThrowUserNotFoundException() {
         // Given
         mockNonExistentUserInRepository(1);  // Mock
 
         // When & Then
-        assertThrows(UserNotFoundException.class, () -> userService.getUser("UnknownName"));
+        assertThrows(UserNotFoundException.class, () -> userService.getUser("UnknownEmail@example.com"));
     }
 
 
