@@ -115,8 +115,8 @@ class UserServiceImplTests {
      */
 
     /**
-     * Test for retrieving a user by a valid name.
-     * Expectation: The user should be successfully retrieved if the name exists.
+     * Test for retrieving a user by a valid email.
+     * Expectation: The user should be successfully retrieved if the email exists.
      */
     @Test
     void getUserByEmail_validEmail_shouldReturnUser() {
@@ -132,7 +132,7 @@ class UserServiceImplTests {
     }
 
     /**
-     * Test for retrieving a user by a name that doesn't exist in the repository.
+     * Test for retrieving a user by a email that doesn't exist in the repository.
      * Expectation: A UserNotFoundException should be thrown.
      */
     @Test
