@@ -11,6 +11,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 /**
@@ -52,6 +53,16 @@ public class User {
     @Max(value = 150, message = "Age value is unrealistic.")
     private int age;
 
+    @NotNull(message = "Password cannot be null.")
+    @Size(min = 8, message = "Password must be at least 8 characters long.")
+    @Pattern.List({
+            @Pattern(regexp = "(?=.*[0-9]).+", message = "Password must contain at least one digit."),
+            @Pattern(regexp = "(?=.*[a-z]).+", message = "Password must contain at least one lowercase character."),
+            @Pattern(regexp = "(?=.*[A-Z]).+", message = "Password must contain at least one uppercase character."),
+            @Pattern(regexp = "(?=.*[!@#$%^&*+=?-]).+", message = "Password must contain at least one special character.")
+    })
+    private String password;
+
     // Constructor
 
     /**
@@ -67,7 +78,21 @@ public class User {
         this.email = email;
     }
 
-    // Helper Methods
+    /**
+     * Sets the user's raw password, then hashes and stores it using BCrypt.
+     *
+     * @param rawPassword the plain-text password provided by the user or application
+     */
+    public void setPassword(String rawPassword) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.password = encoder.encode(rawPassword);
+    }
+
+    /**
+     * Helper method to represent the User object as a string. Excludes sensitive information such as password.
+     *
+     * @return a string representation of the User object
+     */
     @Override
     public String toString() {
         return "User{" +
