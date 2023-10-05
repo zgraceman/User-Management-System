@@ -40,3 +40,10 @@ spring:
       hibernate:
         # Specific SQL dialect for MySQL 5
         dialect: org.hibernate.dialect.MySQL5Dialect
+
+  # ---------------------------
+  # Spring Security settings
+  # ---------------------------
+  autoconfigure:
+    # Exclude Spring Security Auto Configuration
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
