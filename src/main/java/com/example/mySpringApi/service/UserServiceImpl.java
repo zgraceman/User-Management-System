@@ -4,6 +4,7 @@ import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.repository.UserRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,6 +115,10 @@ public class UserServiceImpl implements UserService {
         if(existingUser.isPresent()){
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
+
+        // Encrypt the password before saving
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
 
         try {
             return userRepository.save(user);

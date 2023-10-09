@@ -1,5 +1,6 @@
 package com.example.mySpringApi.api.controller;
 
+import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
@@ -120,8 +121,9 @@ public class UserController {
     @ApiResponse(responseCode = "201", description = "User successfully created")
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @PostMapping("/createUser")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
         log.warn("I am in the createUser controller method");
+        User user = convertToUserEntity(userDTO);
         User createdUser = userService.createUser(user);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
     }
@@ -185,4 +187,14 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
+
+    private User convertToUserEntity(UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.name());
+        user.setEmail(userDTO.email());
+        user.setAge(userDTO.age());
+        user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
+        return user;
+    }
+
 }

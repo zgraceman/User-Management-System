@@ -81,11 +81,10 @@ public class User {
     /**
      * Sets the user's raw password, then hashes and stores it using BCrypt.
      *
-     * @param rawPassword the plain-text password provided by the user or application
+     * @param encryptedPassword the plain-text password provided by the user or application
      */
-    public void setPassword(String rawPassword) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        this.password = encoder.encode(rawPassword);
+    public void setPassword(String encryptedPassword) {
+        this.password = encryptedPassword;
     }
 
     /**
