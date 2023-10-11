@@ -1,6 +1,7 @@
 package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.model.dto.UserDTO;
+import com.example.mySpringApi.model.dto.UserResponseDTO;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.service.UserService;
@@ -188,6 +189,8 @@ public class UserController {
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
 
+    // Helper Methods
+
     private User convertToUserEntity(UserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.name());
@@ -197,4 +200,11 @@ public class UserController {
         return user;
     }
 
+    private UserResponseDTO convertToResponseDTO(User user) {
+        return new UserResponseDTO(
+                user.getName(),
+                user.getEmail(),
+                user.getAge()
+        );
+    }
 }
