@@ -1,8 +1,15 @@
 package com.example.mySpringApi.model.dto;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 
 public record UserDTO(
+
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        int id,
+
         @NotNull(message = "Name cannot be null.")
         @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters.")
         String name,

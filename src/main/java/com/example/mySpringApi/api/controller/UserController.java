@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * UserController is a REST controller that exposes endpoints for interacting with User resources.
@@ -63,7 +64,8 @@ public class UserController {
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
         User user = userService.getUser(id);
-        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
+        UserResponseDTO responseDTO = convertToResponseDTO(user);
+        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
     }
 
     /**
@@ -80,7 +82,8 @@ public class UserController {
     public ResponseEntity<Object> getUser(@PathVariable String email) {
         log.info("I am in the getUser /email/{email} controller method");
         User user = userService.getUser(email);
-        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, user);
+        UserResponseDTO responseDTO = convertToResponseDTO(user);
+        return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
     }
 
     /**
@@ -100,7 +103,10 @@ public class UserController {
     public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
         List<User> users = userService.getAllUsers();
-        return ResponseHandler.generateResponse("All users fetched", HttpStatus.OK, users);
+        List<UserResponseDTO> responseDTOList = users.stream()  // converts each user object in list to
+                .map(this::convertToResponseDTO)                // UserResponseDTO and returns list of
+                .collect(Collectors.toList());                  // UserResponseDTO
+        return ResponseHandler.generateResponse("All users fetched", HttpStatus.OK, responseDTOList);
     }
 
     /**
@@ -126,7 +132,8 @@ public class UserController {
         log.warn("I am in the createUser controller method");
         User user = convertToUserEntity(userDTO);
         User createdUser = userService.createUser(user);
-        return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, createdUser);
+        UserResponseDTO responseDTO = convertToResponseDTO(createdUser);
+        return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, responseDTO);
     }
 
     /**
@@ -153,10 +160,12 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @ApiResponse(responseCode = "404", description = "User not found")
     @PutMapping("/updateUser")
-    public ResponseEntity<Object> updateUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.warn("I am in the updateUser controller method");
+        User user = convertToUserEntity(userDTO);
         User updatedUser = userService.updateUser(user);
-        return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, updatedUser);
+        UserResponseDTO responseDTO = convertToResponseDTO(updatedUser);
+        return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, responseDTO);
     }
 
     /**
@@ -193,6 +202,7 @@ public class UserController {
 
     private User convertToUserEntity(UserDTO userDTO) {
         User user = new User();
+        user.setId(userDTO.id());
         user.setName(userDTO.name());
         user.setEmail(userDTO.email());
         user.setAge(userDTO.age());
@@ -202,6 +212,7 @@ public class UserController {
 
     private UserResponseDTO convertToResponseDTO(User user) {
         return new UserResponseDTO(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getAge()
