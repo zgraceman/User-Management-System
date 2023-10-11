@@ -7,7 +7,6 @@ import jakarta.validation.constraints.*;
 
 public record UserDTO(
 
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         int id,
 
         @NotNull(message = "Name cannot be null.")
