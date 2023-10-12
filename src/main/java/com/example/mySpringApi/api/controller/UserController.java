@@ -26,16 +26,9 @@ import java.util.stream.Collectors;
  * The @RequestMapping("/userAPI") annotation is used at the class level to map the URL prefix for all handler methods
  * in this class.
  *
- * The UserService is injected into this controller via constructor injection.
+ * This controller uses DTOs for data coming in and going out of the system to provide
+ * a separation of concerns between the API's data structure and the internal data model.
  *
- * Two handler methods are provided for fetching User resources:
- * 1. @GetMapping("/id/{id}") maps to a method which retrieves a User by their ID.
- * 2. @GetMapping("/name/{name}") maps to a method which retrieves a User by their name.
- *
- * If a User resource is found, it is returned as the response body.
- * If no User resource is found, null is returned.
- *
- * TODO: Align User model fields with client data with JSON structure in POST request
  */
 @RestController
 @RequestMapping("/userAPI")
@@ -54,7 +47,7 @@ public class UserController {
     /**
      * Retrieves a User by ID.
      * @param id the ID of the User to retrieve
-     * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
+     * @return a ResponseEntity containing the UserResponseDTO if found, and an associated message and HTTP status code.
      */
     @Operation(
             summary = "Get a User by their ID",
@@ -69,9 +62,9 @@ public class UserController {
     }
 
     /**
-     * Retrieves a User by name.
-     * @param email the name of the User to retrieve
-     * @return a ResponseEntity that includes the User object if found, along with a message and HTTP status code.
+     * Retrieves a User by email.
+     * @param email the email of the User to retrieve
+     * @return a ResponseEntity containing the UserResponseDTO if found, and an associated message and HTTP status code.
      */
     @Operation(
             summary = "Get a User by their email",
@@ -92,7 +85,7 @@ public class UserController {
      * This method handles GET requests at the "/userAPI" endpoint. It returns a list of all
      * users from the data store or an appropriate error response if no users exist.
      *
-     * @return a ResponseEntity that includes the list of all User objects or an appropriate error response.
+     * @return a ResponseEntity containing a list of UserResponseDTOs representing all users or an associated message and HTTP status code.
      */
     @Operation(
             summary = "Fetches all Users",
@@ -112,15 +105,15 @@ public class UserController {
     /**
      * Endpoint to create a new user.
      *
-     * This method is mapped to the "/createUser" endpoint and handles HTTP POST requests.
-     * It receives a User object from the request body via the @RequestBody annotation.
-     * This User object is then passed to the createUser method of the UserService, which
-     * saves the user to the database. The User object saved in the database, including
-     * any updates made by the database (like the generated ID for a new user), is returned
-     * in a structured response along with a message and HTTP status code.
+     * This method is mapped to the "/createUser" endpoint and facilitates HTTP POST requests.
+     * The method consumes a UserDTO object from the request body, which signifies the new user's data.
+     * This DTO is subsequently converted to a User entity and handed over to the UserService's
+     * createUser method for persistence. After the user is saved in the database,
+     * the resultant User entity, inclusive of any modifications made during the database operation
+     * (e.g., the auto-generated ID), is transformed into a UserResponseDTO and returned in the response.
      *
-     * @param user A User object contained in the request body.
-     * @return a ResponseEntity that includes the User object saved in the database, a message, and an HTTP status code.
+     * @param userDTO A UserDTO object contained in the request body, representing the data of the new user.
+     * @return a ResponseEntity containing the UserResponseDTO representing the created user, and an associated message and HTTP status code.
      */
     @Operation(
             summary = "Create a new user",
@@ -139,19 +132,18 @@ public class UserController {
     /**
      * Endpoint to update an existing user.
      *
-     * This method is mapped to the "/updateUser" endpoint and handles HTTP PUT requests.
-     * It receives a User object from the request body via the @RequestBody annotation. This
-     * User object should have an ID that corresponds to an existing user in the database.
-     * This User object is then passed to the updateUser method of the UserService, which
-     * updates the user in the database. The updated User object, including any changes
-     * made during the update, is returned in a structured response along with a message and HTTP status code.
+     * Mapped to the "/updateUser" endpoint, this method entertains HTTP PUT requests.
+     * The method acquires a UserDTO from the request body that should already encompass the user's ID
+     * (corresponding to an extant user). This DTO is then morphed into a User entity and relayed to
+     * the UserService's updateUser method for the purpose of updating the existing record in the database.
+     * The updated User entity, after the persistence operation, is subsequently converted to a UserResponseDTO
+     * and included in the response.
      *
-     * If a User with the specified ID does not exist in the database, the updateUser method
-     * throws an EntityNotFoundException.
+     * If there's an absence of a User record with the stipulated ID in the database, the updateUser
+     * method might throw an EntityNotFoundException.
      *
-     * @param user A User object that is included in the request body. This should include
-     *             the ID of the user to be updated.
-     * @return a ResponseEntity that includes the updated User object, a message, and an HTTP status code.
+     * @param userDTO The UserDTO embedded in the request body, expected to have the ID of the user slated for an update.
+     * @return a ResponseEntity with the UserResponseDTO showcasing the updated user, accompanied by a message and an HTTP status.
      */
     @Operation(
             summary = "Update an existing user by ID",
@@ -200,6 +192,18 @@ public class UserController {
 
     // Helper Methods
 
+    /**
+     * Converts a UserDTO object into a User entity.
+     *
+     * This method is useful for transforming the data transfer object received from
+     * the client into an entity that can be managed by the ORM and persisted in the database.
+     *
+     * Note: The password from the DTO is set directly to the User entity.
+     * In a real-world scenario, you would ideally hash/encrypt the password before setting it.
+     *
+     * @param userDTO The UserDTO object to be converted.
+     * @return A User entity populated with the data from the provided UserDTO.
+     */
     private User convertToUserEntity(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.id());
@@ -210,6 +214,17 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Converts a User entity into a UserResponseDTO object.
+     *
+     * This method is useful for transforming the persisted User entity into a
+     * data transfer object that can be sent as a response to the client. This ensures that
+     * only the necessary data (excluding sensitive information like passwords) is exposed
+     * to the client.
+     *
+     * @param user The User entity to be converted.
+     * @return A UserResponseDTO populated with the data from the provided User entity.
+     */
     private UserResponseDTO convertToResponseDTO(User user) {
         return new UserResponseDTO(
                 user.getId(),
