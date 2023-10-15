@@ -190,7 +190,7 @@ public class UserController {
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
 
-    // Helper Methods
+    // Utility Methods
 
     /**
      * Converts a UserDTO object into a User entity.

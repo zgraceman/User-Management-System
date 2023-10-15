@@ -85,6 +85,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Retrieves all User objects from the repository.
+     *
+     * @return a List of User objects. If no Users exist, returns an empty List.
+     */
+    @Override
+    public List<User> getAllUsers() {
+        log.info("(getAllUsers service method) Getting all users from the database");
+        return userRepository.findAll();
+    }
+
+    /**
      * Creates a new User entity in the database.
      *
      * This method checks the validity of the user data before attempting to persist it.
@@ -192,18 +203,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         log.warn("(deleteUser service method) User with id " + id + " deleted successfully");
     }
-
-    /**
-     * Retrieves all User objects from the repository.
-     *
-     * @return a List of User objects. If no Users exist, returns an empty List.
-     */
-    @Override
-    public List<User> getAllUsers() {
-        log.info("(getAllUsers service method) Getting all users from the database");
-        return userRepository.findAll();
-    }
-
 
     // Helper Methods
 

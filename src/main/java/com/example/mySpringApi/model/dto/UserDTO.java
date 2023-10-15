@@ -1,10 +1,17 @@
 package com.example.mySpringApi.model.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 
+/**
+ * Data Transfer Object (DTO) for User-related operations.
+ *
+ * This class is designed to transport user data, especially during interactions
+ * between the client and the server. It comes equipped with validation
+ * annotations to ensure the integrity of the data.
+ *
+ * As a record, it offers a concise way to declare immutable data-only classes.
+ *
+ */
 public record UserDTO(
 
         int id,
