@@ -63,15 +63,6 @@ public class User {
     }
 
     /**
-     * Sets the user's raw password, then hashes and stores it using BCrypt.
-     *
-     * @param encryptedPassword the plain-text password provided by the user or application
-     */
-    public void setPassword(String encryptedPassword) {
-        this.password = encryptedPassword;
-    }
-
-    /**
      * Helper method to represent the User object as a string. Excludes sensitive information such as password.
      *
      * @return a string representation of the User object

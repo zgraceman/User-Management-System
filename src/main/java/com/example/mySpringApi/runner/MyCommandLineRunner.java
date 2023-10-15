@@ -1,6 +1,5 @@
 package com.example.mySpringApi.runner;
 
-import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -59,12 +58,5 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userRepository.count() == 0) {
-            userRepository.save(new User("Zach", 23, "zach@gmail.com"));
-            userRepository.save(new User("Don", 33, "don@gmail.com"));
-            userRepository.save(new User("Michelle", 20, "michelle@gmail.com"));
-            userRepository.save(new User("Janet", 53, "janet@gmail.com"));
-            userRepository.save(new User("Peter", 46, "peter@gmail.com"));
-        }
     }
 }
