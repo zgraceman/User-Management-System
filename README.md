@@ -29,15 +29,28 @@ The User Management System is a backend-focused RESTful API implementation showc
 - Standardized response structure using `ResponseHandler` to maintain consistency in all API responses, which includes a status message and relevant data.
 
 ## Technologies Used
+
+### Core
 - Java
 - Spring Boot
-- Spring Data JPA
-- Hibernate ORM
+- Maven
+
+### Web, Data & Testing
+- Spring Web
+- Spring Data JPA / Hibernate ORM
+- MySQL Connector
+- H2 Database
 - JUnit
 - Mockito
-- AssertJ
-- H2 Database
-- Maven
+
+### Documentation
+- OpenAPI and Swagger
+- JavaDocs
+
+### Validation
+- Spring Validation
+
+### Utility
 - Lombok
 
 ## Usage
