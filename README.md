@@ -3,29 +3,29 @@ The User Management System is a backend-focused RESTful API implementation showc
 
 ## Features
 
-### 1. **CRUD Operations** 
+### **CRUD Operations** 
 - **Create**: Add a new user to the system with unique email identification.
 - **Read**: Retrieve user details based on their ID or name. Additionally, fetch a list of all registered users.
 - **Update**: Modify existing user details using their unique ID.
 - **Delete**: Remove a user from the system using their unique ID.
 
-### 2. **Exception Handling** 
+### **Exception Handling** 
 - Customized responses for various exceptions to ensure clear communication of issues to the client.
 - Detailed error messages for instances such as duplicate email entries or when attempting to access non-existent users.
 
-### 3. **Javadoc Documentation** 
+### **Javadoc Documentation** 
 - Comprehensive documentation provided for each class and method to ensure clarity and ease of understanding for developers.
 - Annotations and clear documentation on the purpose and usage of each REST endpoint.
 
-### 4. **Logging** 
+### **Logging** 
 - Detailed logging provided at different levels (INFO, WARN) for better troubleshooting and system monitoring.
 - Traceable logs for every significant action, such as user creation, update, or deletion.
 
-### 5. **Data Integrity**
+### **Data Integrity**
 - Enforced email uniqueness to ensure each user has a distinct email address.
 - JPA integration for seamless object-relational mapping and data persistence to the "user_info" database table.
 
-### 6. **Response Structuring**
+### **Response Structuring**
 - Standardized response structure using `ResponseHandler` to maintain consistency in all API responses, which includes a status message and relevant data.
 
 ## Technologies Used
@@ -55,7 +55,7 @@ The User Management System is a backend-focused RESTful API implementation showc
 
 ## Usage
 
-### **1. Get a User by ID**
+### **Get a User by ID**
 
 Retrieve a user by their ID.
 
@@ -63,7 +63,7 @@ curl -X GET http://localhost:8080/userAPI/id/{id}
 
 Replace `{id}` with the desired user's ID.
 
-### **2. Get a User by Name**
+### **Get a User by Name**
 
 Retrieve a user by their name.
 
@@ -71,13 +71,13 @@ curl -X GET "http://localhost:8080/userAPI/name/{name}"
 
 Replace `{name}` with the desired user's name. Ensure the name is URL encoded if it contains spaces or special characters.
 
-### **3. Get All Users**
+### **Get All Users**
 
 Retrieve all users.
 
 curl -X GET http://localhost:8080/userAPI
 
-### **4. Create a User**
+### **Create a User**
 
 Add a new user to the system.
 
@@ -89,7 +89,7 @@ curl -X POST http://localhost:8080/userAPI/createUser \
            "age": 25
          }'
 
-### **5. Update a User**
+### **Update a User**
 
 Update an existing user's details.
 
@@ -102,7 +102,7 @@ curl -X PUT http://localhost:8080/userAPI/updateUser \
            "age": 26
          }'
 
-### **6. Delete a User**
+### **Delete a User**
 
 Delete a user by their ID.
 
