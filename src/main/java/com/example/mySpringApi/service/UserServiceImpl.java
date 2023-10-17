@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
      * It also checks if there's an existing user with the same email (excluding the current user).
      * If there is, a UserAlreadyExistsException is thrown.
      *
-     * Encrypts the user's password using BCryptgit 
+     * Encrypts the user's password using BCrypt
      *
      * The @Transactional annotation ensures that the user update process is atomic,
      * thus any failures during the process result in a rollback of the transaction.

@@ -9,6 +9,12 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+/**
+ * Configuration for the OpenAPI documentation.
+ *
+ * This configuration includes details about the API such as contact, version, license, and servers.
+ * Additionally, it provides security scheme details for JWT authentication.
+ */
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
