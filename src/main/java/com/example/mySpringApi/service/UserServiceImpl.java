@@ -103,6 +103,8 @@ public class UserServiceImpl implements UserService {
      * The method also checks for a pre-existing user with the same email.
      * If such a user is found, a UserAlreadyExistsException is thrown.
      *
+     * Encrypts the user's password using BCrypt
+     *
      * The @Transactional annotation ensures that the user creation process is atomic,
      * thus any failures during the process result in a rollback of the transaction.
      *
@@ -149,6 +151,8 @@ public class UserServiceImpl implements UserService {
      * It also checks if there's an existing user with the same email (excluding the current user).
      * If there is, a UserAlreadyExistsException is thrown.
      *
+     * Encrypts the user's password using BCryptgit 
+     *
      * The @Transactional annotation ensures that the user update process is atomic,
      * thus any failures during the process result in a rollback of the transaction.
      *
@@ -175,6 +179,10 @@ public class UserServiceImpl implements UserService {
         if (userWithSameEmail.isPresent() && userWithSameEmail.get().getId() != user.getId()) {
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
+
+        // Encrypt the password before saving
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
 
         try {
             return userRepository.save(user);
