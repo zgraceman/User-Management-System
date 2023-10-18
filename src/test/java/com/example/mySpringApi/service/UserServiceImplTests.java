@@ -56,6 +56,7 @@ class UserServiceImplTests {
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         testUser = new User("Testo", 999, "testo@example.com");
+        testUser.setPassword("SomeTestPassword");
     }
 
     /**
@@ -209,6 +210,7 @@ class UserServiceImplTests {
     void updateUser_validUser_shouldReturnUpdatedUser() {
         // Given
         User updatedUser = new User("UpdatedTesto", 1001, "updatedtesto@example.com");
+        updatedUser.setPassword("SomeUpdatedPassword");
 
         mockUserInRepository(testUser, updatedUser.getId());
         mockSaveUser(updatedUser, updatedUser);

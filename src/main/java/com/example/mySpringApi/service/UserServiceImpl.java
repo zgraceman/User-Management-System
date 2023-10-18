@@ -4,7 +4,6 @@ import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.repository.UserRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
