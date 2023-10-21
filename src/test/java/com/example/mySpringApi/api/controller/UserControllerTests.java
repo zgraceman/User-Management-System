@@ -124,7 +124,8 @@ class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.name").value("John"))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"));
+                .andExpect(jsonPath("$.data.email").value("john@example.com"))
+                .andExpect(jsonPath("$.data.password").doesNotExist());;
     }
 
     /**
@@ -140,7 +141,10 @@ class UserControllerTests {
 
         // When & Then
         mockMvc.perform(get("/userAPI/email/" + nonExistingUserEmail))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.status").value(404));
     }
 
     /*
@@ -174,7 +178,9 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data[0].name").value("John"))
                 .andExpect(jsonPath("$.data[0].email").value("john@example.com"))
                 .andExpect(jsonPath("$.data[1].name").value("Jane"))
-                .andExpect(jsonPath("$.data[1].email").value("jane@example.com"));
+                .andExpect(jsonPath("$.data[1].email").value("jane@example.com"))
+                .andExpect(jsonPath("$.data[0].password").doesNotExist())
+                .andExpect(jsonPath("$.data[1].password").doesNotExist());
     }
 
     /**
