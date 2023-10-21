@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * disabling full autoconfiguration and applying only configuration relevant to MVC tests.
  */
 @WebMvcTest(UserController.class)
-@ImportAutoConfiguration(exclude = SecurityAutoConfiguration.class)
 class UserControllerTests {
 
     @Autowired
@@ -54,6 +51,7 @@ class UserControllerTests {
     void setUp() {
         mockUser = new User("John", 40, "john@example.com");
         mockUser.setId(1);
+        mockUser.setPassword("Password123!");
     }
 
     @AfterEach
@@ -82,7 +80,8 @@ class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.name").value("John"))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"));
+                .andExpect(jsonPath("$.data.email").value("john@example.com"))
+                .andExpect(jsonPath("$.data.password").doesNotExist());
     }
 
     /**
@@ -98,7 +97,10 @@ class UserControllerTests {
 
         // When & Then
         mockMvc.perform(get("/userAPI/id/" + nonExistingUserId))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.data").doesNotExist()) // or use .isEmpty() depending on your implementation
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.status").value(404));
     }
 
     /*

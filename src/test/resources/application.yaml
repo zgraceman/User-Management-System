@@ -34,3 +34,10 @@ spring:
       hibernate:
         # Specific SQL dialect for H2
         dialect: org.hibernate.dialect.H2Dialect
+
+  # ---------------------------
+  # Spring Security settings
+  # ---------------------------
+  autoconfigure:
+    # Exclude Spring Security Auto Configuration
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
