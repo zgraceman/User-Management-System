@@ -2,6 +2,7 @@ package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.service.UserService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -218,23 +219,31 @@ class UserControllerTests {
      */
     @Test
     public void createUser_validUser_shouldReturnCreatedUser() throws Exception {
-        // Given a valid user
-        //User newUser = new User("Alice", 30, "alice@example.com");
+        // Given a valid UserDTO
+        UserDTO newUserDTO = new UserDTO(0, "Alice",  "alice@example.com", 30, "securePassword123!");
+
+        // Given a User entity that the service layer would return
+        User newUser = new User("Alice", 30, "alice@example.com");
+        newUser.setId(1);  // Assuming the user gets an ID after being saved
 
         // Mocking the userService to return the created user when called
-        given(userService.createUser(any(User.class))).willReturn(mockUser);
+        given(userService.createUser(any(User.class))).willReturn(newUser);
 
         // Converting the User object to JSON format
         ObjectMapper objectMapper = new ObjectMapper();
-        String userJson = objectMapper.writeValueAsString(mockUser);
+        String userJson = objectMapper.writeValueAsString(newUserDTO);
 
         // When & Then
         mockMvc.perform(post("/userAPI/createUser")
                         .contentType("application/json")
                         .content(userJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.name").value("John"))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"));
+                .andExpect(jsonPath("$.message").value("User successfully created"))
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.name").value("Alice"))
+                .andExpect(jsonPath("$.data.email").value("alice@example.com"))
+                .andExpect(jsonPath("$.data.age").value(30))
+                .andExpect(jsonPath("$.data.password").doesNotExist());
     }
 
     /**
@@ -247,24 +256,23 @@ class UserControllerTests {
     @Test
     public void createUser_invalidUser_shouldReturnValidationError() throws Exception { // if you have validations
         // Prepare a user object with invalid data
-        mockUser.setName("x");
-        mockUser.setAge(10000);
-        mockUser.setEmail("notAnEmail");
+        UserDTO invalidUserDTO = new UserDTO(0, "x", "notAnEmail", 10000, "pwd");
 
         // Convert the invalidUser object to a JSON string
         ObjectMapper objectMapper = new ObjectMapper();
-        String invalidUserJson = objectMapper.writeValueAsString(mockUser);
+        String invalidUserJson = objectMapper.writeValueAsString(invalidUserDTO);
 
         // Perform a POST request with the invalidUserJson and expect a bad request status (HTTP 400)
         mockMvc.perform(post("/userAPI/createUser")
                         .contentType("application/json")
                         .content(invalidUserJson))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Validation failed for the request."))
+                .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.data.name").value("Name must be between 2 and 50 characters."))
                 .andExpect(jsonPath("$.data.age").value("Age value is unrealistic."))
                 .andExpect(jsonPath("$.data.email").value("Invalid email format."))
-                .andExpect(jsonPath("$.message").value("Validation failed for the request."))
-                .andExpect(jsonPath("$.status").value(400));
+                .andExpect(jsonPath("$.data.rawPassword").value("Password must be at least 8 characters long."));
     }
 
     /*
