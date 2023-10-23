@@ -256,7 +256,7 @@ class UserControllerTests {
     @Test
     public void createUser_invalidUser_shouldReturnValidationError() throws Exception { // if you have validations
         // Prepare a user object with invalid data
-        UserDTO invalidUserDTO = new UserDTO(0, "x", "notAnEmail", 10000, "pwd");
+        UserDTO invalidUserDTO = new UserDTO(0, "x", "notAnEmail", 10000, "pwD!1");
 
         // Convert the invalidUser object to a JSON string
         ObjectMapper objectMapper = new ObjectMapper();
@@ -369,7 +369,11 @@ class UserControllerTests {
         // When & Then
         mockMvc.perform(delete("/userAPI/deleteUser/" + existingUserId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("User deleted successfully"));
+                .andExpect(jsonPath("$.message").value("User deleted successfully"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+
+
+        verify(userService, times(1)).deleteUser(existingUserId);
     }
 
     /**
@@ -390,6 +394,9 @@ class UserControllerTests {
         // When & Then
         mockMvc.perform(delete("/userAPI/deleteUser/" + nonExistingUserId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("User not found"));
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
+
+        verify(userService, times(1)).deleteUser(nonExistingUserId);
     }
 }
