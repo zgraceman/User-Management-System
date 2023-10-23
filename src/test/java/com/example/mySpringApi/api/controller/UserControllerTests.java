@@ -291,6 +291,8 @@ class UserControllerTests {
     @Test
     public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
         // Given an existing user and updated details
+        UserDTO updatedUserDTO = new UserDTO(1, "John Updated", "john_updated@example.com", 45, "NewPassword@123");
+
         User updatedUser = new User("John Updated", 45, "john_updated@example.com");
         updatedUser.setId(1);
 
@@ -298,16 +300,19 @@ class UserControllerTests {
 
         // Convert the updatedUser object to a JSON string
         ObjectMapper objectMapper = new ObjectMapper();
-        String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+        String updatedUserJson = objectMapper.writeValueAsString(updatedUserDTO);
 
         // When & Then
         mockMvc.perform(put("/userAPI/updateUser")
                         .contentType("application/json")
                         .content(updatedUserJson))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User updated successfully"))  // Adjusted success message
+                .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.name").value("John Updated"))
+                .andExpect(jsonPath("$.data.email").value("john_updated@example.com"))
                 .andExpect(jsonPath("$.data.age").value(45))
-                .andExpect(jsonPath("$.data.email").value("john_updated@example.com"));
+                .andExpect(jsonPath("$.data.password").doesNotExist());
     }
 
     /**
@@ -319,21 +324,24 @@ class UserControllerTests {
      */
     @Test
     public void updateUser_nonExistingUser_shouldReturnNotFound() throws Exception {
-        // Given a non-existing user ID
-        User nonExistingUser = new User("Non Existent", 50, "non_existent@example.com");
-        nonExistingUser.setId(999999); // some ID that doesn't exist
+        // Given a non-existing user's details
+        UserDTO nonExistingUserDTO = new UserDTO(999999, "Non Existent", "non_existent@example.com", 50, "securePassword123!");
 
-        given(userService.updateUser(any(User.class))).willThrow(new UserNotFoundException());
+        // Since we're testing the update operation, we're assuming the UserNotFoundException gets thrown at the service layer.
+        // So we need to configure our mock to throw this exception when the updateUser method is called.
+        given(userService.updateUser(any(User.class))).willThrow(new UserNotFoundException("User not found"));
 
-        // Convert the nonExistingUser object to a JSON string
+        // Convert the nonExistingUserDTO object to a JSON string
         ObjectMapper objectMapper = new ObjectMapper();
-        String nonExistingUserJson = objectMapper.writeValueAsString(nonExistingUser);
+        String nonExistingUserJson = objectMapper.writeValueAsString(nonExistingUserDTO);
 
         // When & Then
         mockMvc.perform(put("/userAPI/updateUser")
                         .contentType("application/json")
                         .content(nonExistingUserJson))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.data").doesNotExist());
     }
 
 
