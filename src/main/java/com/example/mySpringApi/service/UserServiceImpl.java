@@ -128,10 +128,6 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
 
-        // Encrypt the password before saving
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) { // consider testing
@@ -178,10 +174,6 @@ public class UserServiceImpl implements UserService {
         if (userWithSameEmail.isPresent() && userWithSameEmail.get().getId() != user.getId()) {
             throw new UserAlreadyExistsException("A user with email " + user.getEmail() + " already exists.");
         }
-
-        // Encrypt the password before saving
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
 
         try {
             return userRepository.save(user);

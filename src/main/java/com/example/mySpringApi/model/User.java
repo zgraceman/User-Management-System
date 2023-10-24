@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * The User is a JPA entity that represents a user in the application.
@@ -59,6 +60,11 @@ public class User {
         this.name = name;
         this.age = age;
         this.email = email;
+    }
+
+    public void setPassword(String rawPassword) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.password = encoder.encode(rawPassword);
     }
 
     /**
