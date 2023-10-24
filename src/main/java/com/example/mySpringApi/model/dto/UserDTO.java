@@ -20,13 +20,13 @@ public record UserDTO(
         @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters.")
         String name,
 
-        @NotNull(message = "Email cannot be null.")
-        @Email(message = "Invalid email format.")
-        String email,
-
         @Min(value = 0, message = "Age must be positive.")
         @Max(value = 150, message = "Age value is unrealistic.")
         int age,
+
+        @NotNull(message = "Email cannot be null.")
+        @Email(message = "Invalid email format.")
+        String email,
 
         @NotNull(message = "Password cannot be null.")
         @Size(min = 8, message = "Password must be at least 8 characters long.")
