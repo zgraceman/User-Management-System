@@ -44,6 +44,6 @@ spring:
   # ---------------------------
   # Spring Security settings
   # ---------------------------
-  autoconfigure:
+  #autoconfigure:
     # Exclude Spring Security Auto Configuration
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    #exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
