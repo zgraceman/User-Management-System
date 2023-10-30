@@ -10,11 +10,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * This service class is responsible for retrieving user details from the database.
+ */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Loads a user's data given their email.
+     *
+     * @param email the user's email
+     * @return a UserDetails object that contains the user's details
+     * @throws UsernameNotFoundException if the user is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
