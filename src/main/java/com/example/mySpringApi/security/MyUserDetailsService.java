@@ -25,6 +25,7 @@ public class MyUserDetailsService implements UserDetailsService {
      * @return a UserDetails object that contains the user's details
      * @throws UsernameNotFoundException if the user is not found
      */
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
