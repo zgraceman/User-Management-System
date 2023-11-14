@@ -1,7 +1,6 @@
 # Application Configuration
 
-# TODO: Switch to a non-root user for database connections for increased security.
-# TODO: Add password encryption for stored passwords.
+# TODO: Switch to a non-root user for database connections for increased security for production
 
 # Spring settings
 spring:
