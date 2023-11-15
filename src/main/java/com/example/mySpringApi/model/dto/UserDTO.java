@@ -1,6 +1,9 @@
 package com.example.mySpringApi.model.dto;
 
+import com.example.mySpringApi.model.Role;
 import jakarta.validation.constraints.*;
+
+import java.util.Set;
 
 /**
  * Data Transfer Object (DTO) for User-related operations.
@@ -36,5 +39,7 @@ public record UserDTO(
                 @Pattern(regexp = "(?=.*[A-Z]).+", message = "Password must contain at least one uppercase character."),
                 @Pattern(regexp = "(?=.*[!@#$%^&*+=?-]).+", message = "Password must contain at least one special character.")
         })
-        String rawPassword
+        String rawPassword,
+
+        Set<String> roles
 ) {}

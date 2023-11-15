@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,6 +93,7 @@ public class UserController {
             description = "Fetches all user details from the database. Returns a list of user objects.")
     @ApiResponse(responseCode = "200", description = "Successfully fetched all users")
     @ApiResponse(responseCode = "204", description = "No users exist")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
@@ -211,6 +213,7 @@ public class UserController {
         user.setEmail(userDTO.email());
         user.setAge(userDTO.age());
         user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
+        user.setRoles(userDTO.roles());
         return user;
     }
 
@@ -230,7 +233,8 @@ public class UserController {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getAge()
+                user.getAge(),
+                user.getRoles()
         );
     }
 }

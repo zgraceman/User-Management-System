@@ -1,5 +1,9 @@
 package com.example.mySpringApi.model.dto;
 
+import com.example.mySpringApi.model.Role;
+
+import java.util.Set;
+
 /**
  * Data Transfer Object (DTO) representing the response structure for User-related operations.
  *
@@ -14,5 +18,7 @@ public record UserResponseDTO(
         int id,
         String name,
         String email,
-        int age
+        int age,
+
+        Set<String> roles
 ) {}
