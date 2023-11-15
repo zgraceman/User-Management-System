@@ -1,9 +1,11 @@
 package com.example.mySpringApi.api.controller;
 
+import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.model.dto.UserResponseDTO;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.service.RoleService;
 import com.example.mySpringApi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +41,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private UserService userService;
+    private final RoleService roleService;
 
     // Construct Injection
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     /**
@@ -213,7 +218,8 @@ public class UserController {
         user.setEmail(userDTO.email());
         user.setAge(userDTO.age());
         user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
-        user.setRoles(userDTO.roles());
+        Set<Role> roles = roleService.findRolesByNames(userDTO.roles()); // Example method
+        user.setRoles(roles);
         return user;
     }
 
@@ -229,12 +235,16 @@ public class UserController {
      * @return A UserResponseDTO populated with the data from the provided User entity.
      */
     private UserResponseDTO convertToResponseDTO(User user) {
+        Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
         return new UserResponseDTO(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getAge(),
-                user.getRoles()
+                roleNames
         );
     }
 }
