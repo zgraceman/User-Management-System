@@ -60,6 +60,7 @@ public class UserController {
             description = "Fetches user details by ID from the database. Returns a single user object.")
     @ApiResponse(responseCode = "200", description = "User found")
     @ApiResponse(responseCode = "404", description = "User not found")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
         User user = userService.getUser(id);
@@ -77,6 +78,7 @@ public class UserController {
             description = "Fetches user details by Email from the database. Returns a single user object.")
     @ApiResponse(responseCode = "200", description = "User found")
     @ApiResponse(responseCode = "404", description = "User not found")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/email/{email}")
     public ResponseEntity<Object> getUser(@PathVariable String email) {
         log.info("I am in the getUser /email/{email} controller method");
@@ -98,7 +100,7 @@ public class UserController {
             description = "Fetches all user details from the database. Returns a list of user objects.")
     @ApiResponse(responseCode = "200", description = "Successfully fetched all users")
     @ApiResponse(responseCode = "204", description = "No users exist")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
         log.info("I am in the getAllUsers controller method");
@@ -127,6 +129,7 @@ public class UserController {
             description = "Creates a new user in the database and returns the created user object.")
     @ApiResponse(responseCode = "201", description = "User successfully created")
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
         log.warn("I am in the createUser controller method");
@@ -158,6 +161,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "User updated successfully")
     @ApiResponse(responseCode = "400", description = "Bad request - validation error")
     @ApiResponse(responseCode = "404", description = "User not found")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.warn("I am in the updateUser controller method");
@@ -190,6 +194,7 @@ public class UserController {
             description = "Deletes a user by ID from the database and returns a confirmation message.")
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @ApiResponse(responseCode = "404", description = "User not found")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable int id) {
         log.warn("I am in the deleteUser /deleteUser/{id} controller method");
@@ -235,7 +240,7 @@ public class UserController {
      * @return A UserResponseDTO populated with the data from the provided User entity.
      */
     private UserResponseDTO convertToResponseDTO(User user) {
-        Set<String> roleNames = user.getRoles().stream()
+        Set<String> roles = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet());
 
@@ -244,7 +249,7 @@ public class UserController {
                 user.getName(),
                 user.getEmail(),
                 user.getAge(),
-                roleNames
+                roles
         );
     }
 }
