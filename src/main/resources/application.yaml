@@ -1,6 +1,7 @@
 # Application Configuration
 
 # TODO: Switch to a non-root user for database connections for increased security for production
+# TODO: Setup HTTPS: Self-Signed SSL, Configure SSL, Create Keystore, Redirect HTTP to HTTPS
 
 # Spring settings
 spring:
