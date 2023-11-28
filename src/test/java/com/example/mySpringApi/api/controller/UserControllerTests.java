@@ -1,8 +1,11 @@
 package com.example.mySpringApi.api.controller;
 
 import com.example.mySpringApi.exception.UserNotFoundException;
+import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.model.dto.UserDTO;
+import com.example.mySpringApi.repository.RoleRepository;
+import com.example.mySpringApi.service.RoleService;
 import com.example.mySpringApi.service.UserService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,10 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.*;
@@ -46,7 +46,11 @@ class UserControllerTests {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private RoleService roleService;
+
     private User mockUser;
+    private Role mockRole;
 
 
     @BeforeEach
@@ -54,6 +58,10 @@ class UserControllerTests {
         mockUser = new User("John", 40, "john@example.com");
         mockUser.setId(1);
         mockUser.setPassword("Password123!");
+
+        // Initialize roles for the mockUser
+        Set<Role> roles = roleService.findRolesByNames(Collections.singleton("USER")); // Example method
+        mockUser.setRoles(roles);
     }
 
     @AfterEach
