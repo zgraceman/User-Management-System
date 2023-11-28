@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.*;
@@ -220,7 +221,8 @@ class UserControllerTests {
     @Test
     public void createUser_validUser_shouldReturnCreatedUser() throws Exception {
         // Given a valid UserDTO
-        UserDTO newUserDTO = new UserDTO(0, "Alice",  30,"alice@example.com", "securePassword123!");
+        Set<String> roles = Set.of("ADMIN");
+        UserDTO newUserDTO = new UserDTO(0, "Alice",  30,"alice@example.com", "securePassword123!", roles);
 
         // Given a User entity that the service layer would return
         User newUser = new User("Alice", 30, "alice@example.com");
@@ -256,7 +258,8 @@ class UserControllerTests {
     @Test
     public void createUser_invalidUser_shouldReturnValidationError() throws Exception { // if you have validations
         // Prepare a user object with invalid data
-        UserDTO invalidUserDTO = new UserDTO(0, "x", 10000, "notAnEmail", "pwD!1");
+        Set<String> roles = Set.of("ADMIN");
+        UserDTO invalidUserDTO = new UserDTO(0, "x", 10000, "notAnEmail", "pwD!1", roles);
 
         // Convert the invalidUser object to a JSON string
         ObjectMapper objectMapper = new ObjectMapper();
@@ -291,7 +294,8 @@ class UserControllerTests {
     @Test
     public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
         // Given an existing user and updated details
-        UserDTO updatedUserDTO = new UserDTO(1, "John Updated", 45, "john_updated@example.com", "NewPassword@123");
+        Set<String> roles = Set.of("ADMIN");
+        UserDTO updatedUserDTO = new UserDTO(1, "John Updated", 45, "john_updated@example.com", "NewPassword@123", roles);
 
         User updatedUser = new User("John Updated", 45, "john_updated@example.com");
         updatedUser.setId(1);
@@ -325,7 +329,8 @@ class UserControllerTests {
     @Test
     public void updateUser_nonExistingUser_shouldReturnNotFound() throws Exception {
         // Given a non-existing user's details
-        UserDTO nonExistingUserDTO = new UserDTO(999999, "Non Existent", 50,"non_existent@example.com", "securePassword123!");
+        Set<String> roles = Set.of("ADMIN");
+        UserDTO nonExistingUserDTO = new UserDTO(999999, "Non Existent", 50,"non_existent@example.com", "securePassword123!", roles);
 
         // Since we're testing the update operation, we're assuming the UserNotFoundException gets thrown at the service layer.
         // So we need to configure our mock to throw this exception when the updateUser method is called.
