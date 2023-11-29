@@ -173,14 +173,22 @@ class UserControllerTests {
      */
     @Test
     public void getAllUsers_usersInDatabase_shouldReturnUserList() throws Exception {
-        // Given a list of users.
-        List<User> users = Arrays.asList(
-                new User("John", 40, "john@example.com"),
-                new User("Jane", 35, "jane@example.com")
-        );
+        // Initialize roles
+        Set<Role> roles = roleService.findRolesByNames(Collections.singleton("USER"));
+
+        // Create user list
+        User user1 = new User("John", 40, "john@example.com");
+        user1.setRoles(roles); // Add roles to user1
+
+        User user2 = new User("Jane", 35, "jane@example.com");
+        user2.setRoles(roles); // Add roles to user2
+
+        List<User> users = Arrays.asList(user1, user2);
+
+        // Mocking the behavior of userService
         given(userService.getAllUsers()).willReturn(users);
 
-        // When & Then
+        // Perform test actions and assertions
         mockMvc.perform(get("/userAPI"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("All users fetched"))
@@ -228,6 +236,8 @@ class UserControllerTests {
      */
     @Test
     public void createUser_validUser_shouldReturnCreatedUser() throws Exception {
+        Set<Role> userRole = roleService.findRolesByNames(Collections.singleton("USER"));
+
         // Given a valid UserDTO
         Set<String> roles = Set.of("ADMIN");
         UserDTO newUserDTO = new UserDTO(0, "Alice",  30,"alice@example.com", "securePassword123!", roles);
@@ -235,6 +245,7 @@ class UserControllerTests {
         // Given a User entity that the service layer would return
         User newUser = new User("Alice", 30, "alice@example.com");
         newUser.setId(1);  // Assuming the user gets an ID after being saved
+        newUser.setRoles(userRole);
 
         // Mocking the userService to return the created user when called
         given(userService.createUser(any(User.class))).willReturn(newUser);
@@ -301,12 +312,15 @@ class UserControllerTests {
      */
     @Test
     public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
+        Set<Role> userRole = roleService.findRolesByNames(Collections.singleton("USER"));
+
         // Given an existing user and updated details
         Set<String> roles = Set.of("ADMIN");
         UserDTO updatedUserDTO = new UserDTO(1, "John Updated", 45, "john_updated@example.com", "NewPassword@123", roles);
 
         User updatedUser = new User("John Updated", 45, "john_updated@example.com");
         updatedUser.setId(1);
+        updatedUser.setRoles(userRole);
 
         given(userService.updateUser(any(User.class))).willReturn(updatedUser);
 
