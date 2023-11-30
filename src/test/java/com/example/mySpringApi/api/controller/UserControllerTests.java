@@ -50,7 +50,7 @@ class UserControllerTests {
     private RoleService roleService;
 
     private User mockUser;
-    private Role mockRole;
+    private Set<Role> userRole;
 
 
     @BeforeEach
@@ -60,8 +60,8 @@ class UserControllerTests {
         mockUser.setPassword("Password123!");
 
         // Initialize roles for the mockUser
-        Set<Role> roles = roleService.findRolesByNames(Collections.singleton("USER")); // Example method
-        mockUser.setRoles(roles);
+        userRole = roleService.findRolesByNames(Collections.singleton("USER")); // Example method
+        mockUser.setRoles(userRole);
     }
 
     @AfterEach
@@ -173,15 +173,12 @@ class UserControllerTests {
      */
     @Test
     public void getAllUsers_usersInDatabase_shouldReturnUserList() throws Exception {
-        // Initialize roles
-        Set<Role> roles = roleService.findRolesByNames(Collections.singleton("USER"));
-
         // Create user list
         User user1 = new User("John", 40, "john@example.com");
-        user1.setRoles(roles); // Add roles to user1
+        user1.setRoles(userRole); // Add roles to user1
 
         User user2 = new User("Jane", 35, "jane@example.com");
-        user2.setRoles(roles); // Add roles to user2
+        user2.setRoles(userRole); // Add roles to user2
 
         List<User> users = Arrays.asList(user1, user2);
 
@@ -236,8 +233,6 @@ class UserControllerTests {
      */
     @Test
     public void createUser_validUser_shouldReturnCreatedUser() throws Exception {
-        Set<Role> userRole = roleService.findRolesByNames(Collections.singleton("USER"));
-
         // Given a valid UserDTO
         Set<String> roles = Set.of("ADMIN");
         UserDTO newUserDTO = new UserDTO(0, "Alice",  30,"alice@example.com", "securePassword123!", roles);
@@ -312,8 +307,6 @@ class UserControllerTests {
      */
     @Test
     public void updateUser_existingUser_shouldReturnUpdatedUser() throws Exception {
-        Set<Role> userRole = roleService.findRolesByNames(Collections.singleton("USER"));
-
         // Given an existing user and updated details
         Set<String> roles = Set.of("ADMIN");
         UserDTO updatedUserDTO = new UserDTO(1, "John Updated", 45, "john_updated@example.com", "NewPassword@123", roles);
