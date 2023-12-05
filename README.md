@@ -1,5 +1,5 @@
 # User-Management-System
-The User Management System is a backend-focused RESTful API implementation showcasing essential backend concepts, software development best practices, advanced architectural approaches, database and front-end integration. It is designed to manage users, featuring comprehensive CRUD operations, custom exception handling, and thorough documentation.
+The User Management System is a comprehensive backend-focused RESTful API, showcasing a range of backend concepts, software development best practices, advanced architectural approaches, and integration with databases and front-end systems. This system is designed for robust user management, featuring extensive CRUD operations, advanced security measures, role-based access control, custom exception handling, and thorough documentation.
 
 ## Features
 
@@ -27,6 +27,15 @@ The User Management System is a backend-focused RESTful API implementation showc
 
 ### **Response Structuring**
 - Standardized response structure using `ResponseHandler` to maintain consistency in all API responses, which includes a status message and relevant data.
+
+### **Role-Based Access Control** 
+- Implemented RBAC to enhance security and provide differentiated access levels.
+- Users can be assigned roles (e.g., "ADMIN", "USER") with specific permissions for various operations
+
+### **Enhanced Security with Spring Security**
+- Integrated Spring Security for authentication and authorization.
+- Database-backed user storage for secure user data management.
+- Password encryption using BCrypt for enhanced security.
 
 ## Technologies Used
 
