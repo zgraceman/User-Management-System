@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  * The User is a JPA entity that represents a user in the application.
- * It includes fields for id, name, age, and email. This entity is managed
+ * It includes fields for id, name, email, age, password, and roles. This entity is managed
  * by UserService for various operations such as retrieval, update, and deletion.
  *
  * This entity is mapped to the "user_info" table in the database.

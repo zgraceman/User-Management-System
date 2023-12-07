@@ -132,7 +132,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
-        log.warn("I am in the createUser controller method");
+        System.out.println("DEBUG: I am in the createUser controller method");
         User user = convertToUserEntity(userDTO);
         User createdUser = userService.createUser(user);
         UserResponseDTO responseDTO = convertToResponseDTO(createdUser);
@@ -164,7 +164,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO) {
-        log.warn("I am in the updateUser controller method");
+        System.out.println("DEBUG: I am in the updateUser controller method");
         User user = convertToUserEntity(userDTO);
         User updatedUser = userService.updateUser(user);
         UserResponseDTO responseDTO = convertToResponseDTO(updatedUser);
@@ -217,6 +217,7 @@ public class UserController {
      * @return A User entity populated with the data from the provided UserDTO.
      */
     private User convertToUserEntity(UserDTO userDTO) {
+        System.out.println("DEBUG: I am in the convertToUserEntity controller method");
         User user = new User();
         user.setId(userDTO.id());
         user.setName(userDTO.name());
@@ -240,6 +241,7 @@ public class UserController {
      * @return A UserResponseDTO populated with the data from the provided User entity.
      */
     private UserResponseDTO convertToResponseDTO(User user) {
+        System.out.println("DEBUG: I am in the convertToResponseDTO controller method");
         Set<String> roles = user.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toSet());
