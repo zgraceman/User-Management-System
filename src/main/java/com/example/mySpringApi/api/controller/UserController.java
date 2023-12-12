@@ -5,7 +5,7 @@ import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.model.dto.UserResponseDTO;
 import com.example.mySpringApi.response.ResponseHandler;
 import com.example.mySpringApi.model.User;
-import com.example.mySpringApi.service.RoleService;
+import com.example.mySpringApi.service.RoleServiceImpl;
 import com.example.mySpringApi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,13 +41,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private UserService userService;
-    private final RoleService roleService;
+    private final RoleServiceImpl roleServiceImpl;
 
     // Construct Injection
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleServiceImpl roleServiceImpl) {
         this.userService = userService;
-        this.roleService = roleService;
+        this.roleServiceImpl = roleServiceImpl;
     }
 
     /**
@@ -63,6 +63,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/id/{id}")
     public ResponseEntity<Object> getUser(@PathVariable int id) {
+        System.out.println("DEBUG: I am in the getUserByID controller method");
         User user = userService.getUser(id);
         UserResponseDTO responseDTO = convertToResponseDTO(user);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
@@ -81,7 +82,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/email/{email}")
     public ResponseEntity<Object> getUser(@PathVariable String email) {
-        log.info("I am in the getUser /email/{email} controller method");
+        System.out.println("DEBUG: I am in the getUserByEmail controller method");
         User user = userService.getUser(email);
         UserResponseDTO responseDTO = convertToResponseDTO(user);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
@@ -103,7 +104,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
-        log.info("I am in the getAllUsers controller method");
+        System.out.println("DEBUG: I am in the getAllUsers controller method");
         List<User> users = userService.getAllUsers();
         List<UserResponseDTO> responseDTOList = users.stream()  // converts each user object in list to
                 .map(this::convertToResponseDTO)                // UserResponseDTO and returns list of
@@ -197,7 +198,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable int id) {
-        log.warn("I am in the deleteUser /deleteUser/{id} controller method");
+        System.out.println("DEBUG: I am in the deleteUser controller method");
         userService.deleteUser(id);
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
     }
@@ -224,7 +225,7 @@ public class UserController {
         user.setEmail(userDTO.email());
         user.setAge(userDTO.age());
         user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
-        Set<Role> roles = roleService.findRolesByNames(userDTO.roles()); // Example method
+        Set<Role> roles = roleServiceImpl.findRolesByNames(userDTO.roles()); // Example method
         user.setRoles(roles);
         return user;
     }

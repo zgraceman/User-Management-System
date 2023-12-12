@@ -28,6 +28,7 @@ public class ResponseHandler {
      * @return a ResponseEntity containing a Map with the message, status and responseObj.
      */
     public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObj) {
+        System.out.println("DEBUG: I am in the generateResponse ResponseHandler method");
         Map<String, Object> map = new HashMap<>();
         map.put("status", status.value());
         map.put("message", message);

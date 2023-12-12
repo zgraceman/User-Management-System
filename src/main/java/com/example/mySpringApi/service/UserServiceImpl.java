@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
      * @throws UserNotFoundException If the User with the provided ID does not exist.
      */
     public User getUser(Integer id) {
-        log.info("(getUser(Integer id) service method) Getting a user from the database via id");
+        System.out.println("DEBUG: I am in the getUserByID service method");
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
      * TODO: Add handling for partial matches in user email search.
      */
     public User getUser(String email) {
-        log.info("(getUser(String name) service method) Getting a user from the database via name");
+        System.out.println("DEBUG: I am in the getUserByEmail service method");
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
     }
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> getAllUsers() {
-        log.info("(getAllUsers service method) Getting all users from the database");
+        System.out.println("DEBUG: I am in the getAllUsers service method");
         return userRepository.findAll();
     }
 
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     public User createUser(User user) {
-        log.warn("(createUser service method) Saving new user to the database");
+        System.out.println("DEBUG: I am in the createUser service method");
 
         if (!isValidUser(user)) {
             throw new InvalidUserInputException("The provided user details are invalid.");
@@ -160,6 +160,7 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     public User updateUser(User user) {
+        System.out.println("DEBUG: I am in the updateUser service method");
 
         if (!userRepository.existsById(user.getId())) {
             throw new UserNotFoundException("User with id " + user.getId() + " does not exist.");
@@ -192,7 +193,7 @@ public class UserServiceImpl implements UserService {
      * @throws UserNotFoundException If the User with the provided id does not exist.
      */
     public void deleteUser(int id) {
-        log.warn("(deleteUser service method) Attempting to delete a user from the database");
+        System.out.println("DEBUG: I am in the deleteUser service method");
 
         // Check if user exists before trying to delete
         if (!userRepository.existsById(id)) {
@@ -215,6 +216,8 @@ public class UserServiceImpl implements UserService {
      * @return boolean indicating whether the User object is valid (true) or not (false).
      */
     public boolean isValidUser(User user) {
+        System.out.println("DEBUG: I am in the isValidUser service method");
+
         if (user.getName() == null || user.getEmail() == null) {
             return false;
         }

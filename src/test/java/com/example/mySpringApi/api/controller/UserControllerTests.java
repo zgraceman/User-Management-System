@@ -4,8 +4,7 @@ import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.model.dto.UserDTO;
-import com.example.mySpringApi.repository.RoleRepository;
-import com.example.mySpringApi.service.RoleService;
+import com.example.mySpringApi.service.RoleServiceImpl;
 import com.example.mySpringApi.service.UserService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +46,7 @@ class UserControllerTests {
     private UserService userService;
 
     @MockBean
-    private RoleService roleService;
+    private RoleServiceImpl roleServiceImpl;
 
     private User mockUser;
     private Set<Role> userRole;
@@ -60,7 +59,7 @@ class UserControllerTests {
         mockUser.setPassword("Password123!");
 
         // Initialize roles for the mockUser
-        userRole = roleService.findRolesByNames(Collections.singleton("USER")); // Example method
+        userRole = roleServiceImpl.findRolesByNames(Collections.singleton("USER")); // Example method
         mockUser.setRoles(userRole);
     }
 
