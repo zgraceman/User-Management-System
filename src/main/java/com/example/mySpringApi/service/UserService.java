@@ -61,4 +61,6 @@ public interface UserService {
      * @return a List of all User objects. Returns an empty list if no Users are found.
      */
     List<User> getAllUsers();
+
+    void createDefaultUserIfNotFound(String name, String email, int age, String password, String roleName);
 }

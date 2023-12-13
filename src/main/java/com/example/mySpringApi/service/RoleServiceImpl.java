@@ -17,7 +17,7 @@ import java.util.Set;
  * TODO: Create exceptions for Role similar to User Exceptions
  */
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 

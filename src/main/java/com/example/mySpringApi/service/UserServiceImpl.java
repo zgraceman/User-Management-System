@@ -3,6 +3,7 @@ package com.example.mySpringApi.service;
 import com.example.mySpringApi.exception.InvalidUserInputException;
 import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
+import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.repository.UserRepository;
 import lombok.Getter;
@@ -15,8 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +42,7 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private RoleServiceImpl roleServiceImpl;
 
     private List<User> userList;
 
@@ -48,8 +52,9 @@ public class UserServiceImpl implements UserService {
      * @param userRepository the repository that provides access to the user data store
      */
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleServiceImpl roleServiceImpl) {
         this.userRepository = userRepository;
+        this.roleServiceImpl = roleServiceImpl;
     }
 
     /**
@@ -241,5 +246,20 @@ public class UserServiceImpl implements UserService {
         Matcher matcher = pattern.matcher(trimmedEmail);
 
         return matcher.matches();
+    }
+
+    @Transactional
+    public void createDefaultUserIfNotFound(String name, String email, int age, String password, String roleName) {
+        Optional<User> existingUser = userRepository.findByEmail("defaultUser@example.com");
+        if (existingUser.isEmpty()) {
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setAge(age);
+            user.setPassword(password);
+            Set<Role> roles = roleServiceImpl.findRolesByNames(Collections.singleton(roleName)); // Example method
+            user.setRoles(roles);
+            userRepository.save(user);
+        }
     }
 }

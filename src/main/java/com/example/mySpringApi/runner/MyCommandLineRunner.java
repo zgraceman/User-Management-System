@@ -1,11 +1,23 @@
 package com.example.mySpringApi.runner;
 
+import com.example.mySpringApi.model.Role;
+import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.repository.RoleRepository;
 import com.example.mySpringApi.repository.UserRepository;
+import com.example.mySpringApi.service.RoleService;
+import com.example.mySpringApi.service.RoleServiceImpl;
+import com.example.mySpringApi.service.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This class serves as a CommandLineRunner for the application.
@@ -18,45 +30,48 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MyCommandLineRunner implements CommandLineRunner {
 
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
 
-    /**
-     * Constructor to inject UserRepository bean into MyCommandLineRunner.
-     *
-     * @param userRepository User repository bean.
-     */
     @Autowired
-    public MyCommandLineRunner(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MyCommandLineRunner(UserService userService, RoleRepository roleRepository) {
+        this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
-    /**
-     * Logs a message after the MyCommandLineRunner bean has been fully initialized.
-     *
-     * The @PostConstruct annotation indicates that this method should be executed after
-     * dependency injection is done to perform any necessary initialization.
-     * This method is called once, just after the initialization of bean properties
-     * and the context.
-     *
-     * The logged message serves as a confirmation that the MyCommandLineRunner bean
-     * has been created and initialized properly. This can be useful in understanding
-     * the lifecycle of this component within the application context.
-     */
     @PostConstruct
     void created() {
-        log.info("==================== MyCommandLineRunner Got Created ====================");
+        log.info("==== MyCommandLineRunner Initialized ====");
     }
 
-    /**
-     * Populate the UserRepository with initial data.
-     *
-     * @param args Command line arguments.
-     * @throws Exception If an error occurs during execution.
-     *
-     * TODO: Add checks to ensure that users with the same names or emails are not added to the database.
-     */
     @Override
     public void run(String... args) throws Exception {
+        // Create roles if they do not exist
+        createRoleIfNotFound(1, "ADMIN");
+        createRoleIfNotFound(2, "USER");
 
+        // Create default user and admin if they don't exist
+        userService.createDefaultUserIfNotFound(
+                "Default Admin",
+                "admin@example.com",
+                0, "admin",
+                "ADMIN"
+        );
+        userService.createDefaultUserIfNotFound(
+                "Default User",
+                "user@example.com",
+                0,
+                "user",
+                "USER"
+        );
+    }
+
+    private void createRoleIfNotFound(int id, String name) {
+        if (roleRepository.findByName(name).isEmpty()) {
+            Role role = new Role();
+            role.setId(id);
+            role.setName(name);
+            roleRepository.save(role);
+        }
     }
 }
