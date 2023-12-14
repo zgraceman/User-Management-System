@@ -32,15 +32,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * Finds roles by their names.
-     *
-     * This method queries the RoleRepository to retrieve Role entities based on a set of role names.
-     * It's used in user management to assign the correct Role entities to users.
-     *
-     * @param roleNames A set of role names to search for.
-     * @return A set of Role entities corresponding to the given names.
+     * {@inheritDoc}
      */
     public Set<Role> findRolesByNames(Set<String> roleNames) {
         return roleRepository.findByNameIn(roleNames);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void createRoleIfNotFound(int id, String name) {
+        if (roleRepository.findByName(name).isEmpty()) {
+            Role role = new Role();
+            role.setId(id);
+            role.setName(name);
+            roleRepository.save(role);
+        }
     }
 }

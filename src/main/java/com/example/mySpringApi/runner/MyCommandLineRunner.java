@@ -31,12 +31,12 @@ import java.util.Set;
 public class MyCommandLineRunner implements CommandLineRunner {
 
     private final UserService userService;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public MyCommandLineRunner(UserService userService, RoleRepository roleRepository) {
+    public MyCommandLineRunner(UserService userService, RoleService roleService) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @PostConstruct
@@ -47,8 +47,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Create roles if they do not exist
-        createRoleIfNotFound(1, "ADMIN");
-        createRoleIfNotFound(2, "USER");
+        roleService.createRoleIfNotFound(1, "ADMIN");
+        roleService.createRoleIfNotFound(2, "USER");
 
         // Create default user and admin if they don't exist
         userService.createDefaultUserIfNotFound(
@@ -64,14 +64,5 @@ public class MyCommandLineRunner implements CommandLineRunner {
                 "user",
                 "USER"
         );
-    }
-
-    private void createRoleIfNotFound(int id, String name) {
-        if (roleRepository.findByName(name).isEmpty()) {
-            Role role = new Role();
-            role.setId(id);
-            role.setName(name);
-            roleRepository.save(role);
-        }
     }
 }

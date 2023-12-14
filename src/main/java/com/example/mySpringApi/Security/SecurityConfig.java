@@ -82,7 +82,8 @@ public class SecurityConfig {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         System.out.println("DEBUG: I am in the configureGlobal Security method");
-        auth.userDetailsService(customUserDetailsService)
+        auth
+                .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
 }
