@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Tag(name = "User Operations", description = "CRUD operations related to User")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
     private final RoleServiceImpl roleServiceImpl;
 
     // Construct Injection
@@ -134,7 +134,7 @@ public class UserController {
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
         System.out.println("DEBUG: I am in the createUser controller method");
-        User user = convertToUserEntity(userDTO);
+        User user = userService.convertToUserEntity(userDTO);
         User createdUser = userService.createUser(user);
         UserResponseDTO responseDTO = convertToResponseDTO(createdUser);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, responseDTO);
@@ -166,7 +166,7 @@ public class UserController {
     @PutMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO) {
         System.out.println("DEBUG: I am in the updateUser controller method");
-        User user = convertToUserEntity(userDTO);
+        User user = userService.convertToUserEntity(userDTO);
         User updatedUser = userService.updateUser(user);
         UserResponseDTO responseDTO = convertToResponseDTO(updatedUser);
         return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, responseDTO);
@@ -205,30 +205,7 @@ public class UserController {
 
     // Utility Methods
 
-    /**
-     * Converts a UserDTO object into a User entity.
-     *
-     * This method is useful for transforming the data transfer object received from
-     * the client into an entity that can be managed by the ORM and persisted in the database.
-     *
-     * Note: The password from the DTO is set directly to the User entity.
-     * In a real-world scenario, you would ideally hash/encrypt the password before setting it.
-     *
-     * @param userDTO The UserDTO object to be converted.
-     * @return A User entity populated with the data from the provided UserDTO.
-     */
-    private User convertToUserEntity(UserDTO userDTO) {
-        System.out.println("DEBUG: I am in the convertToUserEntity controller method");
-        User user = new User();
-        user.setId(userDTO.id());
-        user.setName(userDTO.name());
-        user.setEmail(userDTO.email());
-        user.setAge(userDTO.age());
-        user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
-        Set<Role> roles = roleServiceImpl.findRolesByNames(userDTO.roles()); // Example method
-        user.setRoles(roles);
-        return user;
-    }
+
 
     /**
      * Converts a User entity into a UserResponseDTO object.

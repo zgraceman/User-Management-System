@@ -18,13 +18,13 @@ import java.util.Map;
 /**
  * Handles exceptions for the user-related controllers.
  * It intercepts exceptions thrown within controller methods and formats the error response.
- *
+ * <p>
  * This class leverages Spring's @ControllerAdvice annotation to provide a centralized exception handling across all
  * controller classes. The goal is to have a consistent error response structure throughout the application.
- *
+ * <p>
  * This class now uses the ResponseHandler for generating error responses in a standard structure.
  * This enhances the consistency of all API responses, not just for the successful ones but also for the error scenarios.
- *
+ * <p>
  * Specific types of exceptions can be handled by adding more methods annotated with @ExceptionHandler.
  */
 @ControllerAdvice
@@ -88,7 +88,7 @@ public class UserExceptionHandler {
 
     /**
      * Handles validation exceptions triggered by {@code @Valid} annotations on DTO fields.
-     *
+     * <p>
      * This method captures errors from Spring's built-in validation, transforming them
      * into a standardized API error response using the ResponseHandler.
      *

@@ -5,6 +5,7 @@ import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
+import com.example.mySpringApi.model.dto.UserDTO;
 import com.example.mySpringApi.repository.UserRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -243,7 +244,7 @@ public class UserServiceImpl implements UserService {
     public void createDefaultUserIfNotFound(String name, String email, int age, String password, String roleName) {
         System.out.println("DEBUG: I am in the createDefaultUserIfNotFound service method");
 
-        Optional<User> existingUser = userRepository.findByEmail("defaultUser@example.com");
+        Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isEmpty()) {
             User user = new User();
             user.setName(name);
@@ -254,5 +255,32 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
             userRepository.save(user);
         }
+    }
+
+    /**
+     * Converts a UserDTO object into a User entity.
+     *
+     * This method is useful for transforming the data transfer object received from
+     * the client into an entity that can be managed by the ORM and persisted in the database.
+     *
+     * Note: The password from the DTO is set directly to the User entity.
+     * In a real-world scenario, you would ideally hash/encrypt the password before setting it.
+     *
+     * @param userDTO The UserDTO object to be converted.
+     * @return A User entity populated with the data from the provided UserDTO.
+     */
+    @Override
+    @Transactional
+    public User convertToUserEntity(UserDTO userDTO) {
+        System.out.println("DEBUG: I am in the convertToUserEntity service method");
+        User user = new User();
+        user.setId(userDTO.id());
+        user.setName(userDTO.name());
+        user.setEmail(userDTO.email());
+        user.setAge(userDTO.age());
+        user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
+        Set<Role> roles = roleServiceImpl.findRolesByNames(userDTO.roles()); // Example method
+        user.setRoles(roles);
+        return user;
     }
 }

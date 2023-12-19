@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 /**
  * CustomUserDetailsService implements the UserDetailsService interface to provide
  * a custom way of fetching user details.
- *
+ * <p>
  * This service is used by Spring Security to perform authentication and authorization
  * by loading user-specific data.
- *
+ * <p>
  * Methods:
  * - loadUserByUsername(String email): Overrides the method from UserDetailsService
  *   to load the user by email instead of a username.
@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /**
      * Loads a user by their email address.
-     *
+     * <p>
      * This method is used by Spring Security to fetch user details required for authentication.
      * It converts the roles of the user to GrantedAuthority objects for role-based security.
      *
