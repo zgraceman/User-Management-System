@@ -6,6 +6,7 @@ import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.model.dto.UserDTO;
+import com.example.mySpringApi.model.dto.UserResponseDTO;
 import com.example.mySpringApi.repository.UserRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * UserServiceImpl is a service class that implements the UserService interface.
@@ -45,8 +47,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleServiceImpl roleServiceImpl;
 
-    private List<User> userList;
-
     /**
      * Constructs a new UserServiceImpl with a UserRepository.
      *
@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleServiceImpl = roleServiceImpl;
     }
+
+
+    // CRUD Methods
+
 
     /**
      * {@inheritDoc}
@@ -192,7 +196,9 @@ public class UserServiceImpl implements UserService {
         log.warn("(deleteUser service method) User with id " + id + " deleted successfully");
     }
 
+
     // Helper Methods
+
 
     /**
      * {@inheritDoc}
@@ -259,10 +265,10 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Converts a UserDTO object into a User entity.
-     *
+     * <p>
      * This method is useful for transforming the data transfer object received from
      * the client into an entity that can be managed by the ORM and persisted in the database.
-     *
+     * <p>
      * Note: The password from the DTO is set directly to the User entity.
      * In a real-world scenario, you would ideally hash/encrypt the password before setting it.
      *
@@ -282,5 +288,41 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = roleServiceImpl.findRolesByNames(userDTO.roles()); // Example method
         user.setRoles(roles);
         return user;
+    }
+
+
+    /**
+     * Converts a User entity into a UserResponseDTO object.
+     *
+     * This method is useful for transforming the persisted User entity into a
+     * data transfer object that can be sent as a response to the client. This ensures that
+     * only the necessary data (excluding sensitive information like passwords) is exposed
+     * to the client.
+     *
+     * @param user The User entity to be converted.
+     * @return A UserResponseDTO populated with the data from the provided User entity.
+     */
+    @Override
+    @Transactional
+    public UserResponseDTO convertToResponseDTO(User user) {
+        System.out.println("DEBUG: I am in the convertToResponseDTO controller method");
+        Set<String> roles = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getAge(),
+                roles
+        );
+    }
+
+    @Override
+    public List<UserResponseDTO> convertUsersToResponseDTOs(List<User> users) {
+        return users.stream()
+                .map(this::convertToResponseDTO) // Assuming convertToResponseDTO is already implemented here
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import com.example.mySpringApi.exception.UserAlreadyExistsException;
 import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.model.dto.UserDTO;
+import com.example.mySpringApi.model.dto.UserResponseDTO;
 
 import java.util.List;
 
@@ -124,4 +125,8 @@ public interface UserService {
     void createDefaultUserIfNotFound(String name, String email, int age, String password, String roleName);
 
     User convertToUserEntity(UserDTO userDTO);
+
+    UserResponseDTO convertToResponseDTO(User user);
+
+    List<UserResponseDTO> convertUsersToResponseDTOs(List<User> users);
 }

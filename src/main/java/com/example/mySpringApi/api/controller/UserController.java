@@ -25,14 +25,15 @@ import java.util.stream.Collectors;
 /**
  * UserController is a REST controller that exposes endpoints for interacting with User resources.
  * It routes incoming HTTP requests to appropriate handler methods.
- *
+ * <p>
  * This class is annotated with @RestController, indicating it's a RESTful controller.
  * The @RequestMapping("/userAPI") annotation is used at the class level to map the URL prefix for all handler methods
  * in this class.
- *
+ * <p>
  * This controller uses DTOs for data coming in and going out of the system to provide
  * a separation of concerns between the API's data structure and the internal data model.
  *
+ * TODO: RoleServiceImpl injection to RoleService, abstract method in RoleServiceImpl
  */
 @RestController
 @RequestMapping("/userAPI")
@@ -65,7 +66,7 @@ public class UserController {
     public ResponseEntity<Object> getUser(@PathVariable int id) {
         System.out.println("DEBUG: I am in the getUserByID controller method");
         User user = userService.getUser(id);
-        UserResponseDTO responseDTO = convertToResponseDTO(user);
+        UserResponseDTO responseDTO = userService.convertToResponseDTO(user);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
     }
 
@@ -84,13 +85,13 @@ public class UserController {
     public ResponseEntity<Object> getUser(@PathVariable String email) {
         System.out.println("DEBUG: I am in the getUserByEmail controller method");
         User user = userService.getUser(email);
-        UserResponseDTO responseDTO = convertToResponseDTO(user);
+        UserResponseDTO responseDTO = userService.convertToResponseDTO(user);
         return ResponseHandler.generateResponse("User fetched successfully", HttpStatus.OK, responseDTO);
     }
 
     /**
      * Fetches all Users.
-     *
+     * <p>
      * This method handles GET requests at the "/userAPI" endpoint. It returns a list of all
      * users from the data store or an appropriate error response if no users exist.
      *
@@ -106,15 +107,13 @@ public class UserController {
     public ResponseEntity<Object> getAllUsers() {
         System.out.println("DEBUG: I am in the getAllUsers controller method");
         List<User> users = userService.getAllUsers();
-        List<UserResponseDTO> responseDTOList = users.stream()  // converts each user object in list to
-                .map(this::convertToResponseDTO)                // UserResponseDTO and returns list of
-                .collect(Collectors.toList());                  // UserResponseDTO
+        List<UserResponseDTO> responseDTOList = userService.convertUsersToResponseDTOs(users);
         return ResponseHandler.generateResponse("All users fetched", HttpStatus.OK, responseDTOList);
     }
 
     /**
      * Endpoint to create a new user.
-     *
+     * <p>
      * This method is mapped to the "/createUser" endpoint and facilitates HTTP POST requests.
      * The method consumes a UserDTO object from the request body, which signifies the new user's data.
      * This DTO is subsequently converted to a User entity and handed over to the UserService's
@@ -136,20 +135,20 @@ public class UserController {
         System.out.println("DEBUG: I am in the createUser controller method");
         User user = userService.convertToUserEntity(userDTO);
         User createdUser = userService.createUser(user);
-        UserResponseDTO responseDTO = convertToResponseDTO(createdUser);
+        UserResponseDTO responseDTO = userService.convertToResponseDTO(createdUser);
         return ResponseHandler.generateResponse("User successfully created", HttpStatus.CREATED, responseDTO);
     }
 
     /**
      * Endpoint to update an existing user.
-     *
+     * <p>
      * Mapped to the "/updateUser" endpoint, this method entertains HTTP PUT requests.
      * The method acquires a UserDTO from the request body that should already encompass the user's ID
      * (corresponding to an extant user). This DTO is then morphed into a User entity and relayed to
      * the UserService's updateUser method for the purpose of updating the existing record in the database.
      * The updated User entity, after the persistence operation, is subsequently converted to a UserResponseDTO
      * and included in the response.
-     *
+     * <p>
      * If there's an absence of a User record with the stipulated ID in the database, the updateUser
      * method might throw an EntityNotFoundException.
      *
@@ -168,21 +167,21 @@ public class UserController {
         System.out.println("DEBUG: I am in the updateUser controller method");
         User user = userService.convertToUserEntity(userDTO);
         User updatedUser = userService.updateUser(user);
-        UserResponseDTO responseDTO = convertToResponseDTO(updatedUser);
+        UserResponseDTO responseDTO = userService.convertToResponseDTO(updatedUser);
         return ResponseHandler.generateResponse("User updated successfully", HttpStatus.OK, responseDTO);
     }
 
     /**
      * Endpoint to delete an existing user.
-     *
+     * <p>
      * This method is mapped to the "/deleteUser/{id}" endpoint and handles HTTP DELETE
      * requests. It takes an id path variable, passed by the @PathVariable annotation.
      * This id is then passed to the deleteUser method of the UserService, which deletes
      * the user with the corresponding id from the database.
-     *
+     * <p>
      * The method returns a structured response with a message and HTTP 200 OK status in the response to indicate that
      * the user was successfully deleted.
-     *
+     * <p>
      * If the UserService's deleteUser method throws an EmptyResultDataAccessException
      * (because there is no user with the given id in the database), this method
      * should catch that exception and return an appropriate error response.
@@ -201,35 +200,5 @@ public class UserController {
         System.out.println("DEBUG: I am in the deleteUser controller method");
         userService.deleteUser(id);
         return ResponseHandler.generateResponse("User deleted successfully", HttpStatus.OK, null);
-    }
-
-    // Utility Methods
-
-
-
-    /**
-     * Converts a User entity into a UserResponseDTO object.
-     *
-     * This method is useful for transforming the persisted User entity into a
-     * data transfer object that can be sent as a response to the client. This ensures that
-     * only the necessary data (excluding sensitive information like passwords) is exposed
-     * to the client.
-     *
-     * @param user The User entity to be converted.
-     * @return A UserResponseDTO populated with the data from the provided User entity.
-     */
-    private UserResponseDTO convertToResponseDTO(User user) {
-        System.out.println("DEBUG: I am in the convertToResponseDTO controller method");
-        Set<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
-
-        return new UserResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getAge(),
-                roles
-        );
     }
 }
