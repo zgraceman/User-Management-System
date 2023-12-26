@@ -264,16 +264,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Converts a UserDTO object into a User entity.
-     * <p>
-     * This method is useful for transforming the data transfer object received from
-     * the client into an entity that can be managed by the ORM and persisted in the database.
-     * <p>
-     * Note: The password from the DTO is set directly to the User entity.
-     * In a real-world scenario, you would ideally hash/encrypt the password before setting it.
+     * {@inheritDoc}
      *
-     * @param userDTO The UserDTO object to be converted.
-     * @return A User entity populated with the data from the provided UserDTO.
+     * In this implementation, the password from the DTO is directly set to the User entity.
+     * In a real-world scenario, consider encrypting or hashing the password before setting it.
+     * Additionally, this method retrieves roles by their names using the RoleServiceImpl
+     * and sets these roles to the User entity.
      */
     @Override
     @Transactional
@@ -292,15 +288,11 @@ public class UserServiceImpl implements UserService {
 
 
     /**
-     * Converts a User entity into a UserResponseDTO object.
+     * {@inheritDoc}
      *
-     * This method is useful for transforming the persisted User entity into a
-     * data transfer object that can be sent as a response to the client. This ensures that
-     * only the necessary data (excluding sensitive information like passwords) is exposed
-     * to the client.
-     *
-     * @param user The User entity to be converted.
-     * @return A UserResponseDTO populated with the data from the provided User entity.
+     * This implementation converts the User entity into a UserResponseDTO.
+     * It includes user details and their associated roles, formatted as a list of role names.
+     * Sensitive information like the user's password is not included in the UserResponseDTO.
      */
     @Override
     @Transactional
@@ -319,6 +311,13 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * This implementation iterates over a list of User entities, converting each
+     * one into a UserResponseDTO using the convertToResponseDTO method.
+     * It facilitates the conversion of multiple User entities for client responses.
+     */
     @Override
     public List<UserResponseDTO> convertUsersToResponseDTOs(List<User> users) {
         return users.stream()

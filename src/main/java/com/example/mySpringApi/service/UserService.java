@@ -124,9 +124,42 @@ public interface UserService {
      */
     void createDefaultUserIfNotFound(String name, String email, int age, String password, String roleName);
 
+    /**
+     * Converts a UserDTO object into a User entity.
+     * <p>
+     * This method is responsible for transforming the data transfer object received from
+     * the client into an entity that can be managed by the ORM and persisted in the database.
+     * It ensures the data from the UserDTO is correctly mapped to a User entity.
+     * </p>
+     *
+     * @param userDTO The UserDTO object to be converted.
+     * @return A User entity populated with the data from the provided UserDTO.
+     */
     User convertToUserEntity(UserDTO userDTO);
 
+    /**
+     * Converts a User entity into a UserResponseDTO object.
+     * <p>
+     * This method is used for transforming the User entity into a data transfer object
+     * suitable for sending as a response to the client. This includes omitting sensitive
+     * information like passwords and focusing on data relevant to the client.
+     * </p>
+     *
+     * @param user The User entity to be converted.
+     * @return A UserResponseDTO populated with the data from the provided User entity.
+     */
     UserResponseDTO convertToResponseDTO(User user);
 
+    /**
+     * Converts a list of User entities into a list of UserResponseDTOs.
+     * <p>
+     * This method processes a list of User entities, converting each one into a
+     * UserResponseDTO. It's useful for batch processing of User entities, especially
+     * when responding to requests that retrieve multiple users.
+     * </p>
+     *
+     * @param users The list of User entities to be converted.
+     * @return A list of UserResponseDTOs corresponding to the provided User entities.
+     */
     List<UserResponseDTO> convertUsersToResponseDTOs(List<User> users);
 }
