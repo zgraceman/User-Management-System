@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
  * <p>
  * This controller uses DTOs for data coming in and going out of the system to provide
  * a separation of concerns between the API's data structure and the internal data model.
- *
- * TODO: RoleServiceImpl injection to RoleService, abstract method in RoleServiceImpl
  */
 @RestController
 @RequestMapping("/userAPI")
@@ -42,13 +40,11 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final RoleServiceImpl roleServiceImpl;
 
     // Construct Injection
     @Autowired
-    public UserController(UserService userService, RoleServiceImpl roleServiceImpl) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.roleServiceImpl = roleServiceImpl;
     }
 
     /**

@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private RoleServiceImpl roleServiceImpl;
+    private RoleService roleService;
 
     /**
      * Constructs a new UserServiceImpl with a UserRepository.
@@ -53,9 +53,9 @@ public class UserServiceImpl implements UserService {
      * @param userRepository the repository that provides access to the user data store
      */
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleServiceImpl roleServiceImpl) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
-        this.roleServiceImpl = roleServiceImpl;
+        this.roleService = roleService;
     }
 
 
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(email);
             user.setAge(age);
             user.setPassword(password);
-            Set<Role> roles = roleServiceImpl.findRolesByNames(Collections.singleton(roleName)); // Example method
+            Set<Role> roles = roleService.findRolesByNames(Collections.singleton(roleName)); // Example method
             user.setRoles(roles);
             userRepository.save(user);
         }
@@ -281,7 +281,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDTO.email());
         user.setAge(userDTO.age());
         user.setPassword(userDTO.rawPassword()); // This would ideally encrypt the password before setting.
-        Set<Role> roles = roleServiceImpl.findRolesByNames(userDTO.roles()); // Example method
+        Set<Role> roles = roleService.findRolesByNames(userDTO.roles()); // Example method
         user.setRoles(roles);
         return user;
     }
