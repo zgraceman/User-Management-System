@@ -8,7 +8,7 @@ import lombok.Setter;
 /**
  * The Role entity represents a role or authority that can be assigned to a user in the application.
  * It maps to the "role" table in the database and is used to implement role-based access control (RBAC).
- *
+ * <p>
  * Annotations:
  * - @Entity: Specifies that this class is an entity and is mapped to a database table.
  * - @Getter, @Setter: Lombok annotations to automatically generate getter and setter methods for the fields.

@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 /**
  * Configuration for the OpenAPI documentation.
- *
+ * <p>
  * This configuration includes details about the API such as contact, version, license, and servers.
  * Additionally, it provides security scheme details for JWT authentication.
+ *
+ * TODO: Ensure users cannot access http://localhost:8080/v3/api-docs but admins can
  */
 @OpenAPIDefinition(
         info = @Info(

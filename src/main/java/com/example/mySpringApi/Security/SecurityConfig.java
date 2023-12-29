@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * SecurityConfig configures the security settings for the Spring Boot application.
  * This configuration class sets up the security policy for HTTP requests, specifying which
  * endpoints are secured, the level of access required for each, and the authentication mechanisms.
- *
+ * <p>
  * Annotations:
  * - @Configuration: Marks this class as a configuration class for Spring, allowing it to be used
  *   by the Spring IoC container for dependency injection.
@@ -45,7 +45,7 @@ public class SecurityConfig {
 
     /**
      * Defines the security filter chain that dictates the security policy for HTTP requests.
-     *
+     * <p>
      * This method configures which endpoints require authentication, the level of access needed, and
      * the type of authentication mechanism used. It sets up URL-based security restrictions, and
      * specifies CSRF protection and HTTP Basic authentication settings.
@@ -60,8 +60,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Example endpoint restricted to ADMIN
-                        .requestMatchers("/user/**").hasRole("USER")   // Example endpoint restricted to USER
+                        .requestMatchers("/v3/api-docs").hasRole("ADMIN")  // Example endpoint restricted to ADMIN
                         .anyRequest().authenticated()
                 )
                 .httpBasic();
@@ -71,7 +70,7 @@ public class SecurityConfig {
 
     /**
      * Configures the global authentication settings by specifying the userDetailsService and passwordEncoder.
-     *
+     * <p>
      * This method sets up the authentication manager with a custom user details service for loading user data
      * and a password encoder for password hashing. This configuration is used for validating user credentials
      * during authentication.
