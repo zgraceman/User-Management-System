@@ -13,9 +13,9 @@ import java.util.Set;
  * The User is a JPA entity that represents a user in the application.
  * It includes fields for id, name, email, age, password, and roles. This entity is managed
  * by UserService for various operations such as retrieval, update, and deletion.
- *
+ * <p>
  * This entity is mapped to the "user_info" table in the database.
- *
+ * <p>
  * Annotations:
  * This class is specified as a JPA entity using the @Entity annotation.
  * Lombok's @Getter annotation used to generate getters for all fields.

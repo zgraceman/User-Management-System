@@ -14,8 +14,6 @@ import io.swagger.v3.oas.annotations.servers.Server;
  * <p>
  * This configuration includes details about the API such as contact, version, license, and servers.
  * Additionally, it provides security scheme details for JWT authentication.
- *
- * TODO: Ensure users cannot access http://localhost:8080/v3/api-docs but admins can
  */
 @OpenAPIDefinition(
         info = @Info(
@@ -45,12 +43,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
         }
 )
 @SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT auth authentication",
-        scheme = "bearer",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
+        name = "basicAuth",
+        description = "Basic authentication for accessing the API",
+        scheme = "basic",
+        type = SecuritySchemeType.HTTP
 )
 public class OpenApiConfig {
 }
