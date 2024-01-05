@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatus;
  * It extends UserException to leverage the application's global exception handling
  * and response formatting.
  */
-public class UserNotFoundException extends UserException {
+public class
+UserNotFoundException extends UserException {
 
     /**
      * Constructs a new UserNotFoundException with a preset detail message and HTTP status code.

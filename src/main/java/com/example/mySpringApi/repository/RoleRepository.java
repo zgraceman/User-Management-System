@@ -10,7 +10,7 @@ import java.util.Set;
  * RoleRepository is a JPA repository for the Role entity.
  * It provides a way to perform various operations on the role data in the database, such as
  * querying roles by name and finding roles within a set of names.
- *
+ * <p>
  * This interface extends JpaRepository, which provides standard CRUD operations and JPA query capabilities.
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
