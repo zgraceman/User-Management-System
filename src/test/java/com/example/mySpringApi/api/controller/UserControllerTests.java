@@ -4,6 +4,7 @@ import com.example.mySpringApi.exception.UserNotFoundException;
 import com.example.mySpringApi.model.Role;
 import com.example.mySpringApi.model.User;
 import com.example.mySpringApi.model.dto.UserDTO;
+import com.example.mySpringApi.model.dto.UserResponseDTO;
 import com.example.mySpringApi.service.RoleServiceImpl;
 import com.example.mySpringApi.service.UserService;
 
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.*;
@@ -25,11 +27,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * UserControllerTests is responsible for testing the behavior of the UserController.
- *
+ * <p>
  * This class uses Spring's WebMvcTest to load only the web layer and not the complete
  * context. It leverages MockMvc to send HTTP requests and assert responses.
  *
@@ -63,6 +66,20 @@ class UserControllerTests {
         mockUser.setRoles(userRole);
     }
 
+    private UserResponseDTO createMockUserResponseDTO(User user) {
+        Set<String> roleNames = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getAge(),
+                roleNames
+        );
+    }
+
     @AfterEach
     void tearDown() {
         Mockito.reset(userService);
@@ -81,12 +98,19 @@ class UserControllerTests {
      */
     @Test
     public void getUserById_existingId_shouldReturnUser() throws Exception {
+        // Assuming you have a method to create a UserResponseDTO from a User
+        UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(mockUser);
+
+// Mock the behavior of UserService conversion method
+        given(userService.convertToResponseDTO(mockUser)).willReturn(mockUserResponseDTO);
+
         // Given the mock behavior of UserService.
         given(userService.getUser(1)).willReturn(mockUser);
 
         // When & Then
         mockMvc.perform(get("/userAPI/id/1"))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.name").value("John"))
                 .andExpect(jsonPath("$.data.email").value("john@example.com"))
@@ -164,7 +188,7 @@ class UserControllerTests {
 
     /**
      * Test to verify behavior when there are users in the database.
-     *
+     * <p>
      * This test ensures that the correct HTTP status and user list are returned
      * when there are users present in the database.
      *
@@ -199,7 +223,7 @@ class UserControllerTests {
 
     /**
      * Test to verify behavior when the database has no users.
-     *
+     * <p>
      * This test ensures that the correct HTTP status and an empty list or
      * appropriate message are returned when there are no users in the database.
      *
@@ -225,7 +249,7 @@ class UserControllerTests {
 
     /**
      * Test to verify the creation of a user with valid details.
-     *
+     * <p>
      * This test ensures that when a valid user is created through the createUser endpoint, the correct HTTP status is returned along with the details of the created user in the response.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
@@ -263,7 +287,7 @@ class UserControllerTests {
 
     /**
      * Test to verify the validation error during the creation of a user with invalid details.
-     *
+     * <p>
      * This test ensures that when an invalid user is created through the createUser endpoint, the correct HTTP status and validation error messages are returned to indicate the validation failure.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
@@ -299,7 +323,7 @@ class UserControllerTests {
 
     /**
      * Test to verify updating an existing user.
-     *
+     * <p>
      * This test ensures that when an existing user's details are updated via the updateUser endpoint, the correct HTTP status is returned along with the updated user information in the response.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
@@ -335,7 +359,7 @@ class UserControllerTests {
 
     /**
      * Test to verify the case of updating a non-existing user.
-     *
+     * <p>
      * This test ensures that an attempt to update a non-existing user through the updateUser endpoint returns the correct HTTP status and an appropriate error message.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
@@ -372,7 +396,7 @@ class UserControllerTests {
 
     /**
      * Test to verify deleting a user with an existing ID.
-     *
+     * <p>
      * This test ensures that deleting a user with an existing ID through the deleteUser endpoint returns the correct HTTP status along with a success message indicating the user was deleted.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
@@ -397,7 +421,7 @@ class UserControllerTests {
 
     /**
      * Test to verify the case of deleting a non-existing user.
-     *
+     * <p>
      * This test ensures that an attempt to delete a non-existing user ID through the deleteUser endpoint returns the correct HTTP status and an appropriate error message.
      *
      * @throws Exception if any MVC or JSON parsing exception occurs.
