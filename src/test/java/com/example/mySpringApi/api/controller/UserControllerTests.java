@@ -101,7 +101,7 @@ class UserControllerTests {
         // Assuming you have a method to create a UserResponseDTO from a User
         UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(mockUser);
 
-// Mock the behavior of UserService conversion method
+        // Mock the behavior of UserService conversion method
         given(userService.convertToResponseDTO(mockUser)).willReturn(mockUserResponseDTO);
 
         // Given the mock behavior of UserService.
@@ -111,9 +111,10 @@ class UserControllerTests {
         mockMvc.perform(get("/userAPI/id/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.data.id").value(1))
-                .andExpect(jsonPath("$.data.name").value("John"))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"))
+                .andExpect(jsonPath("$.data.id").value(mockUserResponseDTO.id()))
+                .andExpect(jsonPath("$.data.name").value(mockUserResponseDTO.name()))
+                .andExpect(jsonPath("$.data.email").value(mockUserResponseDTO.email()))
+                .andExpect(jsonPath("$.data.age").value(mockUserResponseDTO.age()))
                 .andExpect(jsonPath("$.data.password").doesNotExist());
     }
 
@@ -149,15 +150,23 @@ class UserControllerTests {
      */
     @Test
     public void getUserByEmail_existingEmail_shouldReturnUser() throws Exception {
-        // Given the mock behavior of UserService.
+        // Create a mock UserResponseDTO from the mockUser
+        UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(mockUser);
+
+        // Mock the behavior of UserService's getUser method
         given(userService.getUser("John@example.com")).willReturn(mockUser);
+
+        // Mock the behavior of UserService's convertToResponseDTO method
+        given(userService.convertToResponseDTO(mockUser)).willReturn(mockUserResponseDTO);
 
         // When & Then
         mockMvc.perform(get("/userAPI/email/John@example.com"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value(1))
-                .andExpect(jsonPath("$.data.name").value("John"))
-                .andExpect(jsonPath("$.data.email").value("john@example.com"))
+                .andDo(print())
+                .andExpect(jsonPath("$.data.id").value(mockUserResponseDTO.id()))
+                .andExpect(jsonPath("$.data.name").value(mockUserResponseDTO.name()))
+                .andExpect(jsonPath("$.data.email").value(mockUserResponseDTO.email()))
+                .andExpect(jsonPath("$.data.age").value(mockUserResponseDTO.age()))
                 .andExpect(jsonPath("$.data.password").doesNotExist());;
     }
 
