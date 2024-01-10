@@ -214,8 +214,15 @@ class UserControllerTests {
 
         List<User> users = Arrays.asList(user1, user2);
 
+        // Create mock UserResponseDTOs
+        UserResponseDTO userResponseDTO1 = createMockUserResponseDTO(user1);
+        UserResponseDTO userResponseDTO2 = createMockUserResponseDTO(user2);
+
         // Mocking the behavior of userService
         given(userService.getAllUsers()).willReturn(users);
+
+        // Mocking the conversion to UserResponseDTOs
+        given(userService.convertUsersToResponseDTOs(users)).willReturn(Arrays.asList(userResponseDTO1, userResponseDTO2));
 
         // Perform test actions and assertions
         mockMvc.perform(get("/userAPI"))
