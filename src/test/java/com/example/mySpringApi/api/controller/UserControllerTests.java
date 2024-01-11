@@ -281,8 +281,17 @@ class UserControllerTests {
         newUser.setId(1);  // Assuming the user gets an ID after being saved
         newUser.setRoles(userRole);
 
+        // Mock the conversion of UserDTO to User entity
+        given(userService.convertToUserEntity(newUserDTO)).willReturn(newUser);
+
         // Mocking the userService to return the created user when called
-        given(userService.createUser(any(User.class))).willReturn(newUser);
+        given(userService.createUser(newUser)).willReturn(newUser);
+
+        // Create a mock UserResponseDTO
+        UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(newUser);
+
+        // Mock the conversion of User to UserResponseDTO
+        given(userService.convertToResponseDTO(newUser)).willReturn(mockUserResponseDTO);
 
         // Converting the User object to JSON format
         ObjectMapper objectMapper = new ObjectMapper();
