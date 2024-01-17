@@ -403,10 +403,15 @@ class UserControllerTests {
     public void updateUser_nonExistingUser_shouldReturnNotFound() throws Exception {
         // Given a non-existing user's details
         Set<String> roles = Set.of("ADMIN");
-        UserDTO nonExistingUserDTO = new UserDTO(999999, "Non Existent", 50,"non_existent@example.com", "securePassword123!", roles);
+        UserDTO nonExistingUserDTO = new UserDTO(999999, "Non Existent", 50, "non_existent@example.com", "securePassword123!", roles);
 
-        // Since we're testing the update operation, we're assuming the UserNotFoundException gets thrown at the service layer.
-        // So we need to configure our mock to throw this exception when the updateUser method is called.
+        // Mock the conversion from UserDTO to User entity
+        User nonExistingUser = new User("Non Existent", 50, "non_existent@example.com");
+        nonExistingUser.setId(999999);
+        nonExistingUser.setRoles(userRole);
+        given(userService.convertToUserEntity(nonExistingUserDTO)).willReturn(nonExistingUser);
+
+        // Mock to throw UserNotFoundException when the update method is called
         given(userService.updateUser(any(User.class))).willThrow(new UserNotFoundException("User not found"));
 
         // Convert the nonExistingUserDTO object to a JSON string
