@@ -57,13 +57,24 @@ class UserControllerTests {
 
     @BeforeEach
     void setUp() {
+        // Create a mock Role
+        Role mockRole = new Role();
+        mockRole.setId(1);  // Use an appropriate id
+        mockRole.setName("USER");
+
+        Set<Role> mockRoles = new HashSet<>();
+        mockRoles.add(mockRole);
+
+        // Mock the behavior of RoleServiceImpl
+        given(roleServiceImpl.findRolesByNames(Collections.singleton("USER"))).willReturn(mockRoles);
+
         mockUser = new User("John", 40, "john@example.com");
         mockUser.setId(1);
         mockUser.setPassword("Password123!");
 
         // Initialize roles for the mockUser
-        userRole = roleServiceImpl.findRolesByNames(Collections.singleton("USER")); // Example method
-        mockUser.setRoles(userRole);
+        //userRole = roleServiceImpl.findRolesByNames(Collections.singleton("USER")); // Example method
+        mockUser.setRoles(mockRoles);
     }
 
     private UserResponseDTO createMockUserResponseDTO(User user) {
