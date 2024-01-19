@@ -52,7 +52,7 @@ class UserControllerTests {
     private RoleServiceImpl roleServiceImpl;
 
     private User mockUser;
-    private Set<Role> userRole;
+    private Set<Role> mockRoles = new HashSet<>();
 
 
     @BeforeEach
@@ -61,20 +61,17 @@ class UserControllerTests {
         Role mockRole = new Role();
         mockRole.setId(1);  // Use an appropriate id
         mockRole.setName("USER");
-
-        Set<Role> mockRoles = new HashSet<>();
         mockRoles.add(mockRole);
 
-        // Mock the behavior of RoleServiceImpl
-        given(roleServiceImpl.findRolesByNames(Collections.singleton("USER"))).willReturn(mockRoles);
+
 
         mockUser = new User("John", 40, "john@example.com");
         mockUser.setId(1);
         mockUser.setPassword("Password123!");
+        mockUser.setRoles(mockRoles);
 
         // Initialize roles for the mockUser
         //userRole = roleServiceImpl.findRolesByNames(Collections.singleton("USER")); // Example method
-        mockUser.setRoles(mockRoles);
     }
 
     private UserResponseDTO createMockUserResponseDTO(User user) {
@@ -126,7 +123,9 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.name").value(mockUserResponseDTO.name()))
                 .andExpect(jsonPath("$.data.email").value(mockUserResponseDTO.email()))
                 .andExpect(jsonPath("$.data.age").value(mockUserResponseDTO.age()))
-                .andExpect(jsonPath("$.data.password").doesNotExist());
+                .andExpect(jsonPath("$.data.password").doesNotExist())
+                .andExpect(jsonPath("$.data.roles", hasSize(1)))
+                .andExpect(jsonPath("$.data.roles[0]").value("USER"));
     }
 
     /**
@@ -178,7 +177,9 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.name").value(mockUserResponseDTO.name()))
                 .andExpect(jsonPath("$.data.email").value(mockUserResponseDTO.email()))
                 .andExpect(jsonPath("$.data.age").value(mockUserResponseDTO.age()))
-                .andExpect(jsonPath("$.data.password").doesNotExist());;
+                .andExpect(jsonPath("$.data.password").doesNotExist())
+                .andExpect(jsonPath("$.data.roles", hasSize(1)))
+                .andExpect(jsonPath("$.data.roles[0]").value("USER"));
     }
 
     /**
@@ -218,10 +219,10 @@ class UserControllerTests {
     public void getAllUsers_usersInDatabase_shouldReturnUserList() throws Exception {
         // Create user list
         User user1 = new User("John", 40, "john@example.com");
-        user1.setRoles(userRole); // Add roles to user1
+        user1.setRoles(mockRoles); // Add roles to user1
 
         User user2 = new User("Jane", 35, "jane@example.com");
-        user2.setRoles(userRole); // Add roles to user2
+        user2.setRoles(mockRoles); // Add roles to user2
 
         List<User> users = Arrays.asList(user1, user2);
 
@@ -290,7 +291,7 @@ class UserControllerTests {
         // Given a User entity that the service layer would return
         User newUser = new User("Alice", 30, "alice@example.com");
         newUser.setId(1);  // Assuming the user gets an ID after being saved
-        newUser.setRoles(userRole);
+        newUser.setRoles(mockRoles);
 
         // Mock the conversion of UserDTO to User entity
         given(userService.convertToUserEntity(newUserDTO)).willReturn(newUser);
@@ -312,6 +313,7 @@ class UserControllerTests {
         mockMvc.perform(post("/userAPI/createUser")
                         .contentType("application/json")
                         .content(userJson))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("User successfully created"))
                 .andExpect(jsonPath("$.data.id").value(1))
@@ -372,7 +374,7 @@ class UserControllerTests {
 
         User updatedUser = new User("John Updated", 45, "john_updated@example.com");
         updatedUser.setId(1);
-        updatedUser.setRoles(userRole);
+        updatedUser.setRoles(mockRoles);
 
         // Mock the conversion from UserDTO to User
         given(userService.convertToUserEntity(updatedUserDTO)).willReturn(updatedUser);
@@ -419,7 +421,7 @@ class UserControllerTests {
         // Mock the conversion from UserDTO to User entity
         User nonExistingUser = new User("Non Existent", 50, "non_existent@example.com");
         nonExistingUser.setId(999999);
-        nonExistingUser.setRoles(userRole);
+        nonExistingUser.setRoles(mockRoles);
         given(userService.convertToUserEntity(nonExistingUserDTO)).willReturn(nonExistingUser);
 
         // Mock to throw UserNotFoundException when the update method is called
