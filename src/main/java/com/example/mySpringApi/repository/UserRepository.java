@@ -19,6 +19,8 @@ import java.util.Optional;
  *
  * TODO: Implement error handling in the repository layer for potential database exceptions.
  * TODO: Consider adding a method to check if a user with the same name or email already exists.
+ *
+ * TODO: Find a way to restrict people from using userRepository.save(user) without permissions
  */
 public interface UserRepository extends JpaRepository<User, Integer> {
 
