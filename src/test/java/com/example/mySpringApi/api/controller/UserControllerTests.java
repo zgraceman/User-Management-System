@@ -133,9 +133,9 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.name").value(mockUserResponseDTO.name()))
                 .andExpect(jsonPath("$.data.email").value(mockUserResponseDTO.email()))
                 .andExpect(jsonPath("$.data.age").value(mockUserResponseDTO.age()))
-                .andExpect(jsonPath("$.data.password").doesNotExist());
-                //.andExpect(jsonPath("$.data.roles", hasSize(1)))
-                //.andExpect(jsonPath("$.data.roles[0]").value("USER"));
+                .andExpect(jsonPath("$.data.password").doesNotExist())
+                .andExpect(jsonPath("$.data.roles", hasSize(1)))
+                .andExpect(jsonPath("$.data.roles[0]").value("USER"));
     }
 
     /**
@@ -240,7 +240,7 @@ class UserControllerTests {
         User user4 = new User("Joshua", 28, "joshua@example.com");
         user4.setRoles(mockRoles);
 
-        List<User> users = Arrays.asList(user1, user2);
+        List<User> users = Arrays.asList(user1, user2, user3, user4);
 
         // Create mock UserResponseDTOs
         UserResponseDTO userResponseDTO1 = createMockUserResponseDTO(user1);
@@ -262,11 +262,27 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.message").value("All users fetched"))
                 .andExpect(jsonPath("$.data", hasSize(4)))
                 .andExpect(jsonPath("$.data[0].name").value("John"))
-                .andExpect(jsonPath("$.data[0].email").value("john@example.com"))
                 .andExpect(jsonPath("$.data[1].name").value("Jane"))
+                .andExpect(jsonPath("$.data[2].name").value("Jamie"))
+                .andExpect(jsonPath("$.data[3].name").value("Joshua"))
+                .andExpect(jsonPath("$.data[0].email").value("john@example.com"))
                 .andExpect(jsonPath("$.data[1].email").value("jane@example.com"))
+                .andExpect(jsonPath("$.data[2].email").value("jamie@example.com"))
+                .andExpect(jsonPath("$.data[3].email").value("joshua@example.com"))
                 .andExpect(jsonPath("$.data[0].password").doesNotExist())
-                .andExpect(jsonPath("$.data[1].password").doesNotExist());
+                .andExpect(jsonPath("$.data[1].password").doesNotExist())
+                .andExpect(jsonPath("$.data[2].password").doesNotExist())
+                .andExpect(jsonPath("$.data[3].password").doesNotExist())
+                .andExpect(jsonPath("$.data[0].roles", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].roles[0]").value("USER"))
+                .andExpect(jsonPath("$.data[1].roles", hasSize(1)))
+                .andExpect(jsonPath("$.data[1].roles[0]").value("ADMIN"))
+                .andExpect(jsonPath("$.data[2].roles", hasSize(1)))
+                .andExpect(jsonPath("$.data[2].roles[0]").value("MODERATOR"))
+                .andExpect(jsonPath("$.data[3].roles", hasSize(3)))
+                .andExpect(jsonPath("$.data[3].roles[0]").value("ADMIN"))
+                .andExpect(jsonPath("$.data[3].roles[1]").value("USER"))
+                .andExpect(jsonPath("$.data[3].roles[2]").value("MODERATOR"));
     }
 
     /**
