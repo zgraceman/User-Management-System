@@ -327,7 +327,7 @@ class UserControllerTests {
         // Given a User entity that the service layer would return
         User newUser = new User("Alice", 30, "alice@example.com");
         newUser.setId(1);  // Assuming the user gets an ID after being saved
-        newUser.setRoles(mockRoles);
+        newUser.setRoles(Collections.singleton(userMockRole));
 
         // Mock the conversion of UserDTO to User entity
         given(userService.convertToUserEntity(newUserDTO)).willReturn(newUser);
@@ -356,7 +356,9 @@ class UserControllerTests {
                 .andExpect(jsonPath("$.data.name").value("Alice"))
                 .andExpect(jsonPath("$.data.email").value("alice@example.com"))
                 .andExpect(jsonPath("$.data.age").value(30))
-                .andExpect(jsonPath("$.data.password").doesNotExist());
+                .andExpect(jsonPath("$.data.password").doesNotExist())
+                .andExpect(jsonPath("$.data.roles", hasSize(1)))
+                .andExpect(jsonPath("$.data.roles[0]").value("USER"));
     }
 
     /**
