@@ -382,6 +382,7 @@ class UserControllerTests {
         mockMvc.perform(post("/userAPI/createUser")
                         .contentType("application/json")
                         .content(invalidUserJson))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Validation failed for the request."))
                 .andExpect(jsonPath("$.status").value(400))
@@ -412,7 +413,7 @@ class UserControllerTests {
 
         User updatedUser = new User("John Updated", 45, "john_updated@example.com");
         updatedUser.setId(1);
-        updatedUser.setRoles(mockRoles);
+        updatedUser.setRoles(Collections.singleton(adminMockRole));
 
         // Mock the conversion from UserDTO to User
         given(userService.convertToUserEntity(updatedUserDTO)).willReturn(updatedUser);
@@ -434,12 +435,15 @@ class UserControllerTests {
         mockMvc.perform(put("/userAPI/updateUser")
                         .contentType("application/json")
                         .content(updatedUserJson))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User updated successfully"))  // Adjusted success message
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.name").value("John Updated"))
                 .andExpect(jsonPath("$.data.email").value("john_updated@example.com"))
                 .andExpect(jsonPath("$.data.age").value(45))
+                .andExpect(jsonPath("$.data.roles", hasSize(1)))
+                .andExpect(jsonPath("$.data.roles[0]").value("ADMIN"))
                 .andExpect(jsonPath("$.data.password").doesNotExist());
     }
 
