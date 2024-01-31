@@ -52,10 +52,10 @@ class UserControllerTests {
     private RoleServiceImpl roleServiceImpl;
 
     private User mockUser;
-    private Role userMockRole = new Role();
-    private Role adminMockRole = new Role();
-    private Role moderatorMockRole = new Role();
-    private Set<Role> mockRoles = new HashSet<>();
+    private final Role userMockRole = new Role();
+    private final Role adminMockRole = new Role();
+    private final Role moderatorMockRole = new Role();
+    private final Set<Role> mockRoles = new HashSet<>();
 
 
     @BeforeEach
