@@ -98,6 +98,21 @@ class UserControllerTests {
         );
     }
 
+    private void mockUserServiceMethods(User user, String email, UserResponseDTO userResponseDTO) {
+
+        // Mocking by user ID
+        given(userService.getUser(user.getId())).willReturn(user);
+
+        // Mocking by email
+        if (email != null) {
+            given(userService.getUser(email)).willReturn(user);
+        }
+
+        // Mocking DTO conversion
+        given(userService.convertToResponseDTO(user)).willReturn(userResponseDTO);
+
+    }
+
     @AfterEach
     void tearDown() {
         Mockito.reset(userService);
@@ -119,11 +134,7 @@ class UserControllerTests {
         // Assuming you have a method to create a UserResponseDTO from a User
         UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(mockUser);
 
-        // Mock the behavior of UserService conversion method
-        given(userService.convertToResponseDTO(mockUser)).willReturn(mockUserResponseDTO);
-
-        // Given the mock behavior of UserService.
-        given(userService.getUser(1)).willReturn(mockUser);
+        mockUserServiceMethods(mockUser, null, mockUserResponseDTO);
 
         // When & Then
         mockMvc.perform(get("/userAPI/id/1"))
@@ -173,11 +184,8 @@ class UserControllerTests {
         // Create a mock UserResponseDTO from the mockUser
         UserResponseDTO mockUserResponseDTO = createMockUserResponseDTO(mockUser);
 
-        // Mock the behavior of UserService's getUser method
-        given(userService.getUser("John@example.com")).willReturn(mockUser);
-
-        // Mock the behavior of UserService's convertToResponseDTO method
-        given(userService.convertToResponseDTO(mockUser)).willReturn(mockUserResponseDTO);
+        // Use the helper method for mocking
+        mockUserServiceMethods(mockUser, "John@example.com", mockUserResponseDTO);
 
         // When & Then
         mockMvc.perform(get("/userAPI/email/John@example.com"))
